@@ -11,6 +11,7 @@
 -->
 <template>
   <span style="position:relative;" v-clickoutside="hide" ref="popunit">
+
     <!--简单类型，只有关闭按键，或者取消/完成按键-->
     <span v-if="simple">
       <slot name="label">
@@ -21,24 +22,26 @@
         <div class="popover-title clearfix" v-if="title" >
           {{title}}
           <a @click.prevent="closePop">
+
             <!-- <remove-icon /> -->
             <i class="iconfont icon-remove-cross"></i>
           </a>
         </div>
         <div class="popover-content scrollbar" :style="{height: height, maxHeight: maxHeight}">
+          
           <!--内容-->
           <slot></slot>
         </div>
         <div class="popover-footer" v-if="!disabled">
+
           <!--按键-->
           <slot name="buttons">
-            <!--<a v-if="disabled" class="btn btn-default btn-sm" type="button" @click.prevent="closePop()">关闭</a>-->
-            <!--<a v-if="!disabled" class="btn btn-default btn-sm" type="button" @click.prevent="closePop()">取消</a>-->
             <a v-if="!disabled" class="btn btn-success btn-sm" type="button" @click.prevent="submitPop()">{{okText}}</a>
           </slot>
         </div>
       </div>
     </span>
+
     <!--非简单类型，popoverShow在组件外部控制-->
     <span v-else>
       <slot name="label">
@@ -49,19 +52,19 @@
         <div class="popover-title clearfix" v-if="title">
           {{title}}
           <a @click.prevent="closePop">
+
             <!-- <remove-icon /> -->
             <i class="iconfont icon-remove-cross"></i>
           </a>
         </div>
         <div class="popover-content scrollbar" :style="{height: height, maxHeight: maxHeight}">
+          
           <!--内容-->
           <slot></slot>
         </div>
         <div class="popover-footer" v-if="!disabled">
           <!--按键-->
           <slot name="buttons">
-            <!--<a v-if="disabled" class="btn btn-default btn-sm" type="button" @click.prevent="closePop()">关闭</a>-->
-            <!--<a v-if="!disabled" class="btn btn-default btn-sm" type="button" @click.prevent="closePop()">取消</a>-->
             <a v-if="!disabled" class="btn btn-success btn-sm" type="button" @click.prevent="submitPop()">{{okText}}</a>
           </slot>
         </div>
@@ -73,6 +76,7 @@
 <script>
 import clickoutside from '../utils/directive/clickoutside'
 import RemoveIcon from 'components/RemoveIcon'
+
 export default {
   directives: {
     clickoutside
@@ -81,35 +85,42 @@ export default {
     RemoveIcon
   },
   props: {
+
     // 简单类型，只有关闭按键，或者取消/完成按键
     simple: {
       type: Boolean,
       default: true
     },
+
     // 非简单类型时，show在组件外部控制
     popoverShow: {
       type: Boolean,
       default: false
     },
+
     // 是否只读，不提交数据,如果为true，则clickOutSide有效
     disabled: {
       type: Boolean,
       default: true
     },
+
     // 标签，点击标签显示弹出框
     label: {
       type: String,
       default: '标签'
     },
+
     // 标题
     title: {
       type: String
     },
+
     // 宽度
     width: {
       type: String,
       default: '300px'
     },
+
     // 内容高度
     height: {
       type: String,
@@ -118,6 +129,7 @@ export default {
     maxHeight: {
       type: String
     },
+
     // 位置，有“top,left,right,bottom”
     pos: {
       type: String,
@@ -129,30 +141,36 @@ export default {
     labelStyle: {
       type: Object
     },
+
     /* small:小的popover，middle: 中的popover, noline: footer没有line，small-noline, middle-noline */
     popoverStyle: {
       type: String,
       default: ''
     },
+
     /* label中可以包含一个图标 */
     icon: {
       type: String
     },
+
     /* UPDATE为true时，根据dom变化更新位置，尽量不用该属性，易导致bug */
     update: {
       type: Boolean,
       default: false
     },
+
     /* disabled，simple不全是true，也可以用outSide控制：可以点击外部关闭弹出框 */
     outSide: {
       type: Boolean,
       default: false
     },
+
     /* ok按键可以是完成/确定等文案 */
     okText: {
       type: String,
       default: '完成'
     },
+
     /* 是否有小箭头 */
     ifArrow: {
       type: Boolean,
@@ -196,6 +214,7 @@ export default {
         this.$emit('showPop')
       }
       let _this = this
+
       this.$nextTick(function () {
         _this.getPos()
       })
@@ -223,8 +242,8 @@ export default {
     },
     getPos () {
       if (this.$refs.label === undefined || this.$refs.pop === undefined) return
-      console.log(this.pos)
-      switch (this.pos) {
+
+        switch (this.pos) {
         case 'bottom':
           this.top = this.$refs.label.offsetHeight + 5 + 'px'
           this.left = -(this.$refs.pop.offsetWidth - this.$refs.label.offsetWidth) / 2 + 'px'
@@ -269,6 +288,7 @@ export default {
         case 'topFlex':
           this.top = 'auto'
           this.bottom = this.$refs.label.offsetHeight + 'px'
+          
           if (this.$refs.popunit.offsetLeft < ((this.$refs.pop.offsetWidth - this.$refs.label.offsetWidth) / 2)) {
             this.left = '-10px'
             this.right = 'auto'

@@ -9,10 +9,25 @@
 -->
 
 <template>
-  <div v-if="!disabled || disabledStyle !== 'label'" class="segi-radio clearfix" :style="{lineHeight: labelHeight}" :class="{'limit-height': limitHeight}">
-    <label class="outsideLabel" :style="{width: labelWidth, height: labelHeight}" v-if="label"><span v-show="required" style="color:#f74444">*</span>{{ label }}</label>
+  <div 
+    v-if="!disabled || disabledStyle !== 'label'" 
+    class="segi-radio clearfix" 
+    :style="{lineHeight: labelHeight}" 
+    :class="{'limit-height': limitHeight}">
+    <label 
+      class="outsideLabel" 
+      :style="{width: labelWidth, height: labelHeight}" 
+      v-if="label">
+      <span v-show="required" style="color:#f74444">*</span>{{ label }}
+    </label>
     <div class="flex-input-width" style="display: inline-block;text-align: left;white-space: normal;" :style="{width: inputWidth}" >
-      <label class="radio-label" :class="{radioDisabled:disabled}" v-for="item in options" @click="handleChange(item)" style="cursor: pointer">
+      <label 
+        class="radio-label"
+        :class="{radioDisabled:disabled}" 
+        v-for="(item, index) in options" 
+        @click="handleChange(item)"
+        :key="index" 
+        style="cursor: pointer">
         <input type="radio" :checked='item.value === selected' :disabled="disabled">
         <span class="radio"></span>
         <span class="radio-text">{{item.name}}</span>
@@ -26,6 +41,7 @@
   import _ from 'lodash'
   import FormLabel from './Label.vue'
   import tabArr from '../utils/tabArr'
+  
   export default {
     components: {FormLabel},
     props: {

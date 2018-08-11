@@ -86,7 +86,6 @@ export default {
     }
   },
   created () {
-//    this.array = _.cloneDeep(this.value)
     this.array = this.value
   },
   methods: {
@@ -103,6 +102,7 @@ export default {
 
 <style scoped lang="less">
   @import '../assets/less/variables.less';
+  
   .segi-checkbox{
     display: inline-block;
     text-align: left;

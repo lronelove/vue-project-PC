@@ -13,7 +13,7 @@
             <span class="caret"></span>
           </a>
           <ul v-if="flag"  class="dropdown-menu"  style="display: block;min-width: 70px;">
-            <li v-for="item in save">
+            <li v-for="(item, index) in save" :key="index">
               <a href="javascript:void(0)" @click.prevent="saveAnother">
                 <label for="saveFile">{{ item.name }}
                 </label>
@@ -25,7 +25,13 @@
           </ul>
         </div>
         <select v-model="page" style="vertical-align:top;display: inline-block;width:40px;height:32px;border-radius:3px;border:1px solid #ccc;">
-          <option v-for="arr in pageCounts" :value="arr" v-text="arr" :selected="$index === 0 ? true : false"></option>
+          <option 
+            v-for="(arr, index) in pageCounts"
+            :key="index" 
+            :value="arr" 
+            v-text="arr" 
+            :selected="$index === 0 ? true : false">
+          </option>
         </select>
       </div>
     </div>
@@ -35,8 +41,9 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th v-for="column in dataTable.columns"
+            <th v-for="(column, index) in dataTable.columns"
                 @click="sortBy(column)"
+                :key="index"
                 :class="{sort: isSortable(column),
                          desc: sort.sortBy === column.value && sort.desc,
                          asc: sort.sortBy === column.value && !sort.desc}"
@@ -51,8 +58,12 @@
           <tr v-if="!paginationAndfilteredRows || paginationAndfilteredRows.length<1">
             <td :colspan="dataTable.columns.length" style="text-align: center">没有任何记录</td>
           </tr>
-          <tr v-else v-for="row in paginationAndfilteredRows">
-            <td v-for="(item, key, index) in row" @click="editField(item, key)" class="text-overflow">
+          <tr v-else v-for="(row, index) in paginationAndfilteredRows" :key="index"> 
+            <td 
+              v-for="(item, key, index) in row" 
+              @click="editField(item, key)"
+              :key="index" 
+              class="text-overflow">
               <span v-if ="!item.editing">
                 <slot :name="item.orderId">{{ item.value }}</slot>
               </span>
@@ -79,13 +90,14 @@
           <a class="v-table-footer-page-btn" href="javascript:"
              :class="{current: currentPage == page + 1}"
              @click="togglePage(page + 1)"
-             v-for="page in centerPartPage">{{page + 1}}</a>
+             v-for="(page, index) in centerPartPage" 
+             :key="index">{{page + 1}}</a>
           <span v-if ="lastPage > 10 && lastPage - currentPage > 5">...</span>
           <a class="v-table-footer-page-btn" href="javascript:"
              :class="{current: currentPage == page + 1}"
              @click="togglePage(page + 1)"
-             v-for="page in lastPartPage">{{page + 1}}</a>
-
+             v-for="(page, index) in lastPartPage" 
+             :key="index">{{page + 1}}</a>
           <a class="v-table-footer-page-btn" href="javascript:"
              @click="togglePage('next')"
              :class="{disabled: currentPage == lastPage}">下一页</a>
@@ -98,6 +110,7 @@
 
 <script>
   import clickoutside from '../utils/directive/clickoutside'
+
   export default {
     directives: {
       clickoutside
@@ -122,6 +135,7 @@
           return [{name: 'CSV', value: 'text/csv'}, {name: 'Excel', value: 'application/vnd.ms-excel'}]
         }
       },
+
       /* table属性 */
       dataTable: {
         type: Object,
@@ -350,16 +364,19 @@
           return [2, 3, 10, 15, 20, 25, 30, 50, 100]
         }
       },
+
       // 是否请求服务器端数据
       async: {
         type: Boolean,
         default: false
       },
+
       // AJAX地址
       url: {
         type: String,
         default: ''
       },
+
       // 参数内容
       param: {
         type: Object,
@@ -399,6 +416,7 @@
             return this.currentPage === this.lastPage ? [this.currentPage - 3, this.currentPage - 2, this.currentPage - 1] : [this.currentPage - 2, this.currentPage - 1, this.currentPage]
           } else {
             const r = []
+
             for (let i = this.lastPage - 6; i < this.lastPage; i++) {
               r.push(i)
             }
@@ -406,6 +424,7 @@
           }
         } else if (this.lastPage > 10) {
           const r = []
+
           for (let i = 1; i < 5; i++) {
             r.push(i)
           }
@@ -478,23 +497,28 @@
       showSave () {
         this.flag = !this.flag
       },
+
       // 隐藏“另存为”
       hideSave () {
         this.flag = false
       },
+
       // “另存为”
       saveAnother () {
         this.showSave()
       },
+
       /* table */
       onChangePageCount () {
         this.currentPage = 1
       },
       filterRows (rows, options, currentPage) {
         rows = this.sort.sortBy ? this.sortRows(rows, this.sort.sortBy) : rows
+
         if (this.searchBy !== '') {
           rows = rows.filter((row) => {
             let r = false
+
             for (let key in row) {
               if (row[key].value
                   .toString()
@@ -516,6 +540,7 @@
           console.log('getPageRows from server')
           this.param.firstRow = this.firstRow
           this.param.lastRow = this.lastRow
+
           this.$http({
             url: this.url, method: 'POST', data: this.param
           }).then((response) => {
@@ -543,6 +568,7 @@
       },
       sortBy (column) {
         if (!column.sortable || !this.dataTable.options.sortable) return
+
         if (column.value === this.sort.sortBy) {
           this.sort.desc = !this.sort.desc
         } else {
@@ -566,6 +592,7 @@
       },
       sortRows (rows, sortBy) {
         const arr = rows.slice(0)
+
         return arr.sort((a, b) => {
           const r = this.sort.desc ? a[sortBy].value < b[sortBy].value : a[sortBy].value > b[sortBy].value
           return r ? 1 : -1
@@ -609,6 +636,7 @@
     position: relative;
     right: 1rem;
   }
+  
   /* table */
   .v-table{
     padding:13px;

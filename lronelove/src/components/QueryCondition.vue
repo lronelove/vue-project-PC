@@ -32,7 +32,6 @@ array: Array属性。
     <div class="top divborder">
       <slot name="header">
         <div class="topLeft">
-          <!--<span class="glyphicon glyphicon-search icon-color" :style="{color:iconColor, fontSize: iconSize}"></span>-->
           <slot name="title">
             <span class="condition">{{ title }}</span>
           </slot>
@@ -40,7 +39,6 @@ array: Array属性。
         <div class="topRight" @click="changeIcon" v-if="toggle">
 
             <span class="icon-color arrow-icon" :class="flag ? 'arrow-bottom' : 'arrow-top'"></span>
-            <!--<span class="glyphicon glyphicon-minus icon-color" :style="{color:iconColor, fontSize: iconSize}" v-if="flag"></span>
             <span class="glyphicon glyphicon-plus icon-color" :style="{color:iconColor, fontSize: iconSize}" v-else></span>-->
         </div>
       </slot>
@@ -48,10 +46,30 @@ array: Array属性。
     <transition name="shrink">
       <div v-if="flag">
         <div class="middle">
-          <div v-if="array" class="unit" v-for="(a, index) in array">
+          <div v-if="array" class="unit" v-for="(a, index) in array" :key="index">
             <select2 v-if="a.type==='select2'" :outside="outside" :required="a.required" :label="a.label" :labelIcon="a.labelIcon" :labelWidth="a.labelWidth" :options="a.options" :holder1="a.holder1" :holder2="a.holder2" :caret="a.caret" v-model.trim="value[index]"></select2>
-            <segi-form-input v-else-if="a.type==='input'" :outside="outside" :required="a.required" :label="a.label" :labelIcon="a.labelIcon" :labelWidth="a.labelWidth" :holder="a.holder" v-model.trim="value[index]"></segi-form-input>
-            <date-picker v-else-if="a.type==='datePicker'" :outside="outside" :required="a.required" :label="a.label" :labelIcon="a.labelIcon" :labelWidth="a.labelWidth" :holder="a.holder" :lastDateValue="a.lastDateValue" :timePicker="a.timePicker" v-model.trim="value[index]"></date-picker>
+            <segi-form-input 
+              v-else-if="a.type==='input'" 
+              :outside="outside" 
+              :required="a.required" 
+              :label="a.label" 
+              :labelIcon="a.labelIcon" 
+              :labelWidth="a.labelWidth" 
+              :holder="a.holder" 
+              v-model.trim="value[index]">
+            </segi-form-input>
+            <date-picker 
+              v-else-if="a.type==='datePicker'" 
+              :outside="outside" 
+              :required="a.required" 
+              :label="a.label" 
+              :labelIcon="a.labelIcon" 
+              :labelWidth="a.labelWidth" 
+              :holder="a.holder" 
+              :lastDateValue="a.lastDateValue" 
+              :timePicker="a.timePicker" 
+              v-model.trim="value[index]">
+            </date-picker>
           </div>
           <slot>
           </slot>
@@ -70,6 +88,7 @@ array: Array属性。
   import Select2 from './Select2'
   import SegiFormInput from './SegiFormInput'
   import DatePicker from './DatePicker'
+
   export default {
     props: {
       title: {
@@ -120,11 +139,13 @@ array: Array属性。
       addSchedule () {
         this.$emit('add')
       },
+
       /* 查询函数 */
       query () {
         this.$emit('query')
         this.$emit('input', this.value)
       },
+
       /* 点击实现下落或者收起 */
       changeIcon () {
         this.flag = !this.flag
@@ -135,6 +156,7 @@ array: Array属性。
 
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   .querycondition{
     box-shadow: @container-shadow;
     border-radius: 4px;

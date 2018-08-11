@@ -180,20 +180,24 @@ export default {
       let showPrevJump = false
       let showNextJump = false
       let array = []
+
       if (this.allPages > count + 2) {
         if (this.currentPage > count - 3) {
           showPrevJump = true
         }
+
         if (this.currentPage < this.allPages - 3) {
           showNextJump = true
         }
       }
       if (showPrevJump && !showNextJump) {
         const startPage = this.allPages - (count - 1)
+
         for (let i = startPage; i < this.allPages; i++) {
           array.push(i)
         }
       } else if (!showPrevJump && showNextJump) {
+
         for (let i = 2; i < count + 1; i++) {
           array.push(i)
         }
@@ -252,6 +256,7 @@ export default {
     },
     changePage (page) {
       page = Number(page)
+      
       if (page > this.allPages) {
         this.currentPage = this.allPages
         this.$emit('changePage', this.allPages)
@@ -268,8 +273,10 @@ export default {
     changeSize (val) {
       if (this.currentPageSize !== val) {
         this.currentPageSize = val
+
         // 更改 size 后，查询第一页数据
         this.currentPage = 1
+
         if (this.currentPage > this.allPages) {
           // this.currentPage = this.allPages
           this.$emit('changeSize', val)
@@ -282,6 +289,7 @@ export default {
     },
     prev () {
       const current = this.currentPage
+
       if (current <= 1) {
         return false
       }
@@ -289,6 +297,7 @@ export default {
     },
     next () {
       const current = this.currentPage
+
       if (current >= this.allPages) {
         return false
       }
@@ -296,6 +305,7 @@ export default {
     },
     jumpPrev () {
       const page = this.currentPage - 5
+
       if (page > 0) {
         this.changePage(page)
       } else {
@@ -304,6 +314,7 @@ export default {
     },
     jumpNext () {
       const page = this.currentPage + 5
+      
       if (page > this.allPages) {
         this.changePage(this.allPages)
       } else {

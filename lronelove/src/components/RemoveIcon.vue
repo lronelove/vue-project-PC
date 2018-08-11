@@ -24,10 +24,12 @@ export default {
       type: String,
       default: 'line'
     },
+
     /* icon大小 */
     width: {
       type: String
     },
+
     /* circle类型颜色：red,gray */
     circleColor: {
       type: String,
@@ -41,6 +43,7 @@ export default {
 </script>
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   .popover .remove-line{
     width: 18px;
     height: 18px;

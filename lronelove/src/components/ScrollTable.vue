@@ -22,8 +22,10 @@ data () {
  -->
 <template>
   <div class="tb">
+
     <!-- 标题部分 -->
     <slot name="title"></slot>
+
     <!-- 表格部分 -->
     <div class="tb-body">
       <div class="head-container">
@@ -32,6 +34,7 @@ data () {
         </div>
       </div>
       <div class="tb-content scrollbar" :style="{height: height, maxHeight: maxHeight}" ref="content" @scroll="getHeadLeft()">
+       
         <!-- 内容 -->
         <div v-show="!loading" :style="{minWidth: minWidth}">
           <slot name="contents"></slot>
@@ -40,6 +43,7 @@ data () {
         <loading :loading="loading" style="margin:20px 0;width:100%;overflow: hidden;"/>
       </div>
     </div>
+    
     <!-- 底部，如分页 -->
     <slot name="footer"></slot>
   </div>
@@ -59,11 +63,13 @@ export default {
       type: Boolean,
       default: false
     },
+    
     /* 是否没有数据，如果是，则展示“没有任何记录” */
     noData: {
       type: Boolean,
       default: true
     },
+    
     /* 对象数组，name,width */
     heads: {
       type: Array,
@@ -71,6 +77,7 @@ export default {
         return []
       }
     },
+    
     /* 表格内容部分的宽、高 */
     height: {
       type: String,
@@ -101,6 +108,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/less/variables.less';
+
 .head-container{
   overflow: hidden;
   position: relative;

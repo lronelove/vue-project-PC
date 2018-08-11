@@ -83,7 +83,7 @@ props参数解释
               <!--<span class="caret"></span>-->
             </button>
             <ul class="dropdown-menu" v-if="flag">
-              <li v-for="s in save">
+              <li v-for="(s, index) in save" :key="index">
                 <a>
                   <label for="saveFile">
                     {{ s.name }}<input type="file" id="saveFile" :accept="s.value">
@@ -104,7 +104,15 @@ props参数解释
         <thead>
           <tr :class="{borderClass: acrossMode}">
             <!--每个对象包含的列表的头部名称（一个数组）-->
-            <th v-for="(item,index) in tableHead" :rowspan="computeSpan(item, 0)" :colspan="computeSpan(item, 1)" :style="{width: item.percent}" v-if="!showArray[index]" :class="{borderClass: !acrossMode}" :title="columnMessage()" @dblclick="hideColumn(index)">
+            <th 
+              v-for="(item,index) in tableHead" 
+              :key="index" :rowspan="computeSpan(item, 0)" 
+              :colspan="computeSpan(item, 1)" 
+              :style="{width: item.percent}" 
+              v-if="!showArray[index]" 
+              :class="{borderClass: !acrossMode}" 
+              :title="columnMessage()" 
+              @dblclick="hideColumn(index)">
               <slot :name="item.id"><span :class="item.icon"></span>{{ typeof item.name === 'object'? item.name.text: item.name }}</slot>
             </th>
           </tr>
@@ -117,7 +125,7 @@ props参数解释
               <!--<span ></span>-->
               <div class="loading" v-show="tableLoading">
                 <ul class="loading-animation">
-                  <li v-for="i in 5"></li>
+                  <li v-for="i in 5" :key="i"></li>
                 </ul>
               </div>
             </td>
@@ -129,7 +137,12 @@ props参数解释
             </td>
           </tr>
           <tr v-if="fixedRows && tableData.length > 0" class="fixedTr" :class="{borderClass: acrossMode}">
-            <td v-for="(o,index) in fixedObject" :class="{borderClass: !acrossMode}" :style="{fontSize: fontSize}" style="vertical-align: middle">
+            <td 
+              v-for="(o,index) in fixedObject" 
+              :class="{borderClass: !acrossMode}" 
+              :style="{fontSize: fontSize}" 
+              :key="index" 
+              style="vertical-align: middle">
               <slot :name="o.id">{{ typeof o === 'object'? o.text: o }}</slot>
             </td>
           </tr>
@@ -137,7 +150,7 @@ props参数解释
       </table>
       <div class="loading" v-show="addDataLoading">
         <ul class="loading-animation">
-          <li v-for="i in 5"></li>
+          <li v-for="i in 5" :key="i"></li>
         </ul>
       </div>
       <button v-if="lazy && hasLoadingBtn && hasNextPage && tableData.length > 0" @click="lazyLoad" class="btn btn-primary" style="text-align: center">加载</button>
@@ -150,7 +163,18 @@ props参数解释
         </div>
         <div class="flex-start">
           <span>
-            每页显示<select2 style="margin: 0 5px;" ref="footerSelect2" directionOverRide="top" v-model="number" :options="computedPageCounts" v-if="!lazy" inputWidth="56px" inputHeight="28px" optionsType="number"></select2>条
+            每页显示
+            <select2 
+              style="margin: 0 5px;" 
+              ref="footerSelect2" 
+              directionOverRide="top" 
+              v-model="number" 
+              :options="computedPageCounts" 
+              v-if="!lazy" 
+              inputWidth="56px" 
+              inputHeight="28px" 
+              optionsType="number">
+            </select2>条
           </span>
           <div class="footer-right" style="margin-left:20px;">
             <!--<button type="button" class="btn-prev left-btn" :disabled="firstDisable" @click="firstPage">首页</button>-->
@@ -161,7 +185,12 @@ props参数解释
                 <span class="d-arrow"><i class="glyphicon glyphicon-menu-left"></i><i class="glyphicon glyphicon-menu-left" style="margin-left: -7px;"></i></span>
                 <span class="dots glyphicon glyphicon-option-horizontal"></span>
               </li>
-              <li v-for="page in filteredPage" @click="changeValue(page)" :class="{active: page === currentPage}">{{ page }}</li>
+              <li 
+                v-for="(page, index) in filteredPage" 
+                :key="index" 
+                @click="changeValue(page)" 
+                :class="{active: page === currentPage}">{{ page }}
+              </li>
               <li class="more" v-if="pageNumber >= 7 && filteredPage[filteredPage.length - 1] !== pageNumber - 1" @click="nextSection">
                 <span class="d-arrow"><i class="glyphicon glyphicon-menu-right"></i><i class="glyphicon glyphicon-menu-right" style="margin-left: -7px;"></i></span>
                 <span class="dots glyphicon glyphicon-option-horizontal"></span>
@@ -181,7 +210,10 @@ props参数解释
     <div class="table-footer" v-if="lazy" v-show="!fakeFooterFlag">
       <slot name="footer">
         <div class="footer-left">
-          <span>第<span v-if="tableData.length > 0"> 1 </span> <span v-else> 0 </span>到<span> {{ tableData.length }} </span>条记录,共<span> {{ sum }} </span>条</span>
+          <span>第<span v-if="tableData.length > 0"> 1 </span> 
+          <span v-else> 0 </span>到
+          <span> {{ tableData.length }} </span>条记录,共
+          <span> {{ sum }} </span>条</span>
         </div>
       </slot>
     </div>
@@ -194,7 +226,18 @@ props参数解释
           </div>
           <div class="flex-start">
           <span>
-            每页显示<select2 ref="fakeFooterSelect2" directionOverRide="top" style="margin: 0 5px;" v-model="number" :options="computedPageCounts" v-if="!lazy" inputWidth="56px" inputHeight="28px" optionsType="number"></select2>条
+            每页显示
+            <select2 
+              ref="fakeFooterSelect2" 
+              directionOverRide="top" 
+              style="margin: 0 5px;" 
+              v-model="number" 
+              :options="computedPageCounts" 
+              v-if="!lazy" 
+              inputWidth="56px" 
+              inputHeight="28px" 
+              optionsType="number">
+            </select2>条
           </span>
             <div class="footer-right" style="margin-left:20px;">
               <!--<button type="button" class="btn-prev left-btn" :disabled="firstDisable" @click="firstPage">首页</button>-->
@@ -205,7 +248,12 @@ props参数解释
                   <span class="d-arrow"><i class="glyphicon glyphicon-menu-left"></i><i class="glyphicon glyphicon-menu-left" style="margin-left: -7px;"></i></span>
                   <span class="dots glyphicon glyphicon-option-horizontal"></span>
                 </li>
-                <li v-for="page in filteredPage" @click="changeValue(page)" :class="{active: page === currentPage}">{{ page }}</li>
+                <li 
+                  v-for="(page, index) in filteredPage" 
+                  :key="index" 
+                  @click="changeValue(page)" 
+                  :class="{active: page === currentPage}">{{ page }}
+                </li>
                 <li class="more" v-if="pageNumber >= 7 && filteredPage[filteredPage.length - 1] !== pageNumber - 1" @click="nextSection">
                   <span class="d-arrow"><i class="glyphicon glyphicon-menu-right"></i><i class="glyphicon glyphicon-menu-right" style="margin-left: -7px;"></i></span>
                   <span class="dots glyphicon glyphicon-option-horizontal"></span>
@@ -247,9 +295,11 @@ var tableFooterSlot = ''
 function deepClone (createElement) {
   if (!tableFooterSlot || tableFooterSlot === '') return
   var vnodes = tableFooterSlot
+
   function cloneVNode (vnode) {
     const clonedChildren = vnode.children && vnode.children.map(vnode => cloneVNode(vnode))
     const cloned = createElement(vnode.tag, vnode.data, clonedChildren)
+    
     cloned.text = vnode.text
     cloned.isComment = vnode.isComment
     cloned.componentOptions = vnode.componentOptions
@@ -366,6 +416,7 @@ export default {
       type: Boolean,
       default: true
     },
+
     // 最后一列是否有默认的padding-right:20px;
     noLastPadding: {
       type: Boolean,
@@ -375,16 +426,22 @@ export default {
   data () {
     return {
       defaultFooterFlag: true,
+
       /* 浮动底部开关 */
       fakeFooterFlag: false,
+
       /* 作为判断是否显示或者隐藏另存为后的选项的参数 */
       flag: false,
+
       /* 表格每页显示的数据数量 */
       number: null,
+
       /* 用来生成showArray的引子 */
       showArr: [],
+      
       /* 用来筛选需要显示的对象属性组成的数组(filteredTableData里使用) */
       pick: [],
+      
       /* 另存为所显示的选项名和选项值 */
       save: [{name: 'CSV', value: 'text/csv'}, {name: 'Excel', value: 'application/vnd.ms-excel'}]
     }
@@ -412,6 +469,7 @@ export default {
         this.$emit('changePage', 1)
       } else {
         this.$emit('changeNumber', this.number)
+        
         if (this.currentPage === 1) {
           (this.tableData.length < this.totalRecords || this.number < this.tableData.length) && this.$emit('query', {start: this.start, end: this.end, number: this.number})
         } else {
@@ -446,6 +504,7 @@ export default {
     /* 生成的显示在右上角的每页可选数据的数组 */
     filteredPageCounts () {
       let arr = []
+
       this.pageCounts.forEach((item) => {
         if (typeof item === 'object' && item.hasOwnProperty('value')) {
           arr.push(item.value)
@@ -457,6 +516,7 @@ export default {
     },
     computedPageCounts () {
       let arr = []
+
       this.pageCounts.forEach((item) => {
         if (typeof item === 'object' && item.hasOwnProperty('value')) {
           arr.push({name: item.value.toString(), value: item.value})
@@ -489,9 +549,11 @@ export default {
       }
       let arr = []
       let computedProperties = []
+
       for (let i = 0; i < this.tableHead.length; i++) {
         if (typeof this.tableHead[i] === 'object' && this.tableHead[i].hasOwnProperty('attrName')) {
           this.pick.push(this.tableHead[i].attrName)
+
           if (this.tableHead[i].hasOwnProperty('computed')) {
             computedProperties.push({name: this.tableHead[i].attrName, fn: this.tableHead[i].computed})
           }
@@ -576,6 +638,7 @@ export default {
     /* 底部栏的总页数的数组 */
     showPage () {
       let arr = []
+
       for (let i = 0; i < this.pageNumber; i++) {
         arr.push(i + 1)
       }
@@ -596,6 +659,7 @@ export default {
       } else {
         let start = this.currentPage - 3
         let end = this.currentPage + 2
+
         if (start < 1) {
           start = 1
           end = 6
@@ -624,15 +688,18 @@ export default {
       var footer = self.$el.getElementsByClassName('table-footer')[0]
       var fakeFooter = self.$el.getElementsByClassName('table-footer-fake')[0]
       var warp = closest(self.$el, '.scrollbar')
+
       if (!warp) {
         self.fakeFooterFlag = false
         self.defaultFooterFlag = false
         return
       }
       tableFooterSlot = self.$slots.footer
+
       /* 默认footer的情况 */
       if (!tableFooterSlot) {
         self.defaultFooterFlag = true
+
         setTimeout(() => {
           fakeFooter.style.bottom = (((window.innerHeight - warp.getBoundingClientRect().bottom) > 0) ? (window.innerHeight - warp.getBoundingClientRect().bottom) : 0) + 'px'
         }, 0)
@@ -654,16 +721,19 @@ export default {
         return
       } else {
         self.defaultFooterFlag = false
+
         /* footer是由外部传入slot的情况 */
         console.log(tableFooterSlot)
         if (self.fakeFooterFlagControl) {
           self.fakeFooterFlag = true
         }
+
 //        fakeFooter.style.width = footer.offsetWidth + 'px'
         setTimeout(() => {
           fakeFooter.style.bottom = (((window.innerHeight - warp.getBoundingClientRect().bottom) > 0) ? (window.innerHeight - warp.getBoundingClientRect().bottom) : 0) + 'px'
         }, 0)
         showFakeFooterOrNot(footer, fakeFooter, warp, self);
+
         (function (footer, fakeFooter, warp, self) {
           if (!warp.onscroll) {
             warp.onscroll = function () {
@@ -680,6 +750,7 @@ export default {
         console.log(self.$refs.tableSlotCopy)
         self.$refs.tableSlotCopy.$forceUpdate()
       }
+
       function showFakeFooterOrNot (footer, fakeFooter, warp, self) {
 //        fakeFooter.style.width = footer.offsetWidth + 'px'
         fakeFooter.style.width = self.$el.getElementsByClassName('table-body')[0].offsetWidth + 'px'
@@ -700,6 +771,7 @@ export default {
 //          console.log('none')
         }
       }
+
       function closest (el, selector) {
         var matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector
         while (el) {
@@ -712,12 +784,14 @@ export default {
         return el
       }
     },
+
     /* 选中一行tr */
     selectLine (obj, index) {
       if (this.selectTr) {
         this.$emit('selectLine', {obj, index})
       }
     },
+
     /* 懒加载事件 */
     lazyLoad () {
       var self = this
@@ -727,11 +801,13 @@ export default {
       this.$emit('changePage', (this.currentPage + 1))
       this.$emit('load')
     },
+
     /* 双击隐藏此列的提示信息 */
     columnMessage () {
       let content = this.hideFlag ? '双击隐藏此列' : null
       return content
     },
+
     /* 获取对象的初始key所对应的顺序 */
     getObjectKeyOrder (obj, key) {
       let i = 0
@@ -742,18 +818,22 @@ export default {
         i++
       }
     },
+
     /* 新增事件 */
     addEvents () {
       this.$emit('add')
     },
+    
     /* 显示或隐藏另存为 */
     showSave () {
       table2Excel(this.$refs.myTable, 'xlsx', this.savedFileName || this.title)
     },
+    
     /* 隐藏另存为 */
     hideSave () {
       this.flag = false
     },
+    
     /* 改变当前的页面 */
     changeValue (page) {
       var self = this
@@ -762,10 +842,12 @@ export default {
       })
       this.$emit('changePage', page)
     },
+    
     /* 隐藏该列 */
     hideColumn (index) {
       this.hideFlag && (this.$set(this.showArray, index, true))
     },
+    
     /* 底部栏的第一页 */
     firstPage () {
       var self = this
@@ -774,6 +856,7 @@ export default {
       })
       this.$emit('changePage', 1)
     },
+    
     /* 上一页 */
     previousPage () {
       var self = this
@@ -782,6 +865,7 @@ export default {
       })
       this.$emit('changePage', (this.currentPage - 1))
     },
+    
     /* 下一页 */
     nextPage () {
       var self = this
@@ -790,6 +874,7 @@ export default {
       })
       this.$emit('changePage', (this.currentPage + 1))
     },
+    
     /* 上五页 */
     previousSection () {
       var self = this
@@ -799,6 +884,7 @@ export default {
       let page = (this.currentPage - 5 < 1) ? 1 : this.currentPage - 5
       this.$emit('changePage', page)
     },
+    
     /* 下五页 */
     nextSection () {
       var self = this
@@ -808,6 +894,7 @@ export default {
       let page = (this.currentPage + 5 > this.pageNumber) ? this.pageNumber : this.currentPage + 5
       this.$emit('changePage', page)
     },
+    
     /* 最后一页 */
     lastPage () {
       var self = this
@@ -816,6 +903,7 @@ export default {
       })
       this.$emit('changePage', this.pageNumber)
     },
+    
     /* 计算跨行或跨列 */
     computeSpan (obj, isRow) {
       if (typeof obj === 'object') {
@@ -829,6 +917,7 @@ export default {
     var self = this
     this.buildFakeFooter()
     var el = this.$el.querySelector('.table-body')
+    
     ElementResize(el, (elem) => {
       self.$el.getElementsByClassName('table-footer-fake')[0].style.width = self.$el.getElementsByClassName('table-body')[0].offsetWidth + 'px'
     })
@@ -842,6 +931,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/less/variables.less';
+
 .flex-start {
   display: -webkit-flex;
   display: -ms-flexbox;

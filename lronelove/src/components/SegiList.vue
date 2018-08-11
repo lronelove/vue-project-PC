@@ -6,7 +6,7 @@
         <!--<a class="pull-right">{{linkTitle}}</a>-->
       </div>
       <div class="mini-widget-body">
-        <div class="item clearfix" v-for="(item, index) in list">
+        <div class="item clearfix" v-for="(item, index) in list" :key="index">
           <div class="pull-left">
             <i :class="item.icon"></i><em>{{item.name}}</em>
           </div>
@@ -36,7 +36,31 @@ export default{
       type: Array,
       default: () => {
         return [
-          {icon: 'glyphicon glyphicon-time', name: '最大频次', content: '1'}, {icon: 'glyphicon glyphicon-piggy-bank', name: '寻常币', content: '50'}, {icon: 'glyphicon glyphicon-star', name: '成长值', content: '20'}, {icon: 'glyphicon glyphicon-adjust', name: '周期', content: '永久'}, {icon: 'glyphicon glyphicon-stats', name: '状态', content: '生效'}
+          {
+            icon: 'glyphicon glyphicon-time', 
+            name: '最大频次', 
+            content: '1'
+          }, 
+          {
+            icon: 'glyphicon glyphicon-piggy-bank', 
+            name: '寻常币', 
+            content: '50'
+          }, 
+          {
+            icon: 'glyphicon glyphicon-star', 
+            name: '成长值', 
+            content: '20'
+          }, 
+          {
+            icon: 'glyphicon glyphicon-adjust', 
+            name: '周期', 
+            content: '永久'
+          }, 
+          {
+            icon: 'glyphicon glyphicon-stats', 
+            name: '状态', 
+            content: '生效'
+          }
         ]
       }
     }

@@ -1,28 +1,116 @@
 <template>
   <!--外嵌格式-->
   <div v-if="outside" >
-    <div v-if="!disabled || disabledStyle !== 'label'" :class="[{error: errorTip.length>0}, 'segi-input', 'clearfix']" >
-      <label v-if="label" :style="{width: labelWidth, paddingTop: getPaddingTop()}" class="outsideLabel">
+    <div 
+      v-if="!disabled || disabledStyle !== 'label'" 
+      :class="[{error: errorTip.length>0}, 'segi-input', 'clearfix']" >
+      <label 
+        v-if="label" 
+        :style="{width: labelWidth, paddingTop: getPaddingTop()}" 
+        class="outsideLabel">
         <span v-show="required">*</span>{{label}}
       </label>
-      <input  v-if="inputType === 'text'" :minlength="inputMinLenth" :maxlength="inputMaxLength" type="text" class="form-control flex-input-width" :value="val" @input="updateValue($event.target.value)" @keyup.enter="queryData()" :name="inputName" :id="inputId" :placeholder="getholder()" :disabled="disabled" :style="{ width: inputWidth, height: inputHeight, borderRadius: radius}">
-      <input v-else-if="inputType === 'number'" type="number" :minlength="inputMinLenth" :maxlength="inputMaxLength" :min="min" :max="max" :step="step" class="form-control flex-input-width" :value="val" @change="validateNumber($event.target.value)" @input="updateValue($event.target.value)" @keyup.enter="queryData()" :name="inputName" :id="inputId" :placeholder="getholder()" :disabled="disabled" :style="{ width: inputWidth, height: inputHeight, borderRadius: radius}">
-      <input v-else-if="inputType === 'file' && hideFlag === false" type="file" class="form-control" @change="updateEvent($event)" :style="{ width: inputWidth, height: inputHeight, borderRadius: radius}">
+      <input  
+        v-if="inputType === 'text'" 
+        :minlength="inputMinLenth" 
+        :maxlength="inputMaxLength" 
+        type="text" 
+        class="form-control flex-input-width" 
+        :value="val" 
+        @input="updateValue($event.target.value)" 
+        @keyup.enter="queryData()" 
+        :name="inputName" 
+        :id="inputId" 
+        :placeholder="getholder()" 
+        :disabled="disabled" 
+        :style="{ width: inputWidth, height: inputHeight, borderRadius: radius}">
+      <input 
+        v-else-if="inputType === 'number'" 
+        type="number" 
+        :minlength="inputMinLenth" 
+        :maxlength="inputMaxLength" 
+        :min="min" 
+        :max="max"
+        :step="step"
+        class="form-control flex-input-width" 
+        :value="val" 
+        @change="validateNumber($event.target.value)" 
+        @input="updateValue($event.target.value)" 
+        @keyup.enter="queryData()" 
+        :name="inputName" 
+        :id="inputId" 
+        :placeholder="getholder()" 
+        :disabled="disabled" 
+        :style="{ width: inputWidth, height: inputHeight, borderRadius: radius}">
+      <input 
+        v-else-if="inputType === 'file' && hideFlag === false" 
+        type="file" 
+        class="form-control" 
+        @change="updateEvent($event)" 
+        :style="{ width: inputWidth, height: inputHeight, borderRadius: radius}">
       <div class="error-tip" :style="{'left': labelWidth}" v-if="errorTip.length>0">{{errorTip}}</div>
       <div v-if="hideFlag"><a class="btn btn-danger" @click="delImg">清空已存在的图片</a></div>
       <div v-else-if="inputType === 'textarea'" style="display:inline-block">
-        <textarea class="form-control scrollbar" :value="val" :minlength="inputMinLenth" :maxlength="textareaMaxLength" @input="updateValue($event.target.value, 'textarea')" :style="{ width: inputWidth, height: textareaHeight, borderRadius: radius}" style="resize: none;padding:9px 10px;" :placeholder="getholder()" :disabled="disabled"></textarea>
+        <textarea 
+          class="form-control scrollbar" 
+          :value="val" 
+          :minlength="inputMinLenth" 
+          :maxlength="textareaMaxLength" 
+          @input="updateValue($event.target.value, 'textarea')" 
+          :style="{ width: inputWidth, height: textareaHeight, borderRadius: radius}" 
+          style="resize: none;padding:9px 10px;" 
+          :placeholder="getholder()" 
+          :disabled="disabled">
+          </textarea>
         <span v-if="textareaNumberTip" class="tip-text">还可输入{{textareaMaxLength - val.length < 0 ? 0 : textareaMaxLength - val.length}}个字</span>
       </div>
-      <div v-else-if="inputType === 'div'" class="div-input" :style="{ width: inputWidth, height: inputHeight, borderRadius: radius, lineHeight: inputHeight}" style="padding-left: 10px;display: inline-block;overflow: hidden;text-overflow: ellipsis">{{val}}</div>
+      <div 
+        v-else-if="inputType === 'div'" 
+        class="div-input" 
+        :style="{ width: inputWidth, height: inputHeight, borderRadius: radius, lineHeight: inputHeight}" 
+        style="padding-left: 10px;display: inline-block;overflow: hidden;text-overflow: ellipsis">{{val}}
+      </div>
     </div>
-    <form-label v-else :label="label" :value="val" :labelWidth="labelWidth" :inputWidth="inputWidth" :inputHeight="inputType === 'textarea' ? textareaHeight : ''"/>
+    <form-label 
+      v-else 
+      :label="label" 
+      :value="val" 
+      :labelWidth="labelWidth" 
+      :inputWidth="inputWidth" 
+      :inputHeight="inputType === 'textarea' ? textareaHeight : ''"/>
   </div>
   <!--内嵌格式-->
   <label v-else class="input segi_formInput" :style="{ width: inputWidth}">
-    <input v-if="inputType === 'text'" type="text" class="form-control" :maxlength="inputMaxLength"  v-model.trim="val" @keyup.enter="queryData()" :name="inputName" :id="inputId" :placeholder="getholder()" :disabled="disabled" :style="[baseStyle, inputStyle]">
-    <input v-else-if="inputType === 'number'" type="number" :min="min" :max="max" :step="step" :maxlength="inputMaxLength"  class="form-control" @input="updateValue($event.target.value)" @keyup.enter="queryData()" :style="[baseStyle, inputStyle]" :placeholder="getholder()">
-    <input v-else-if="inputType === 'file'" type="file" class="form-control" @input="updateValue($event.target.value)" :style="[baseStyle, inputStyle]">
+    <input 
+      v-if="inputType === 'text'" 
+      type="text" 
+      class="form-control" 
+      :maxlength="inputMaxLength"  
+      v-model.trim="val" 
+      @keyup.enter="queryData()" 
+      :name="inputName" 
+      :id="inputId" 
+      :placeholder="getholder()" 
+      :disabled="disabled" 
+      :style="[baseStyle, inputStyle]">
+    <input 
+      v-else-if="inputType === 'number'" 
+      type="number" 
+      :min="min" 
+      :max="max" 
+      :step="step" 
+      :maxlength="inputMaxLength"  
+      class="form-control" 
+      @input="updateValue($event.target.value)" 
+      @keyup.enter="queryData()" 
+      :style="[baseStyle, inputStyle]" 
+      :placeholder="getholder()">
+    <input 
+      v-else-if="inputType === 'file'" 
+      type="file" 
+      class="form-control" 
+      @input="updateValue($event.target.value)" 
+      :style="[baseStyle, inputStyle]">
     <span class="labelBox" :style="{height: inputHeight, lineHeight: inputHeight, width: labelWidth}">
       <span class="labelText"><i :class="labelIcon"></i>{{label}}<span v-show="required" style="color:red">*</span></span>
     </span>
@@ -30,24 +118,13 @@
 </template>
 
 <script>
-  // import _ from 'lodash'
   import FormLabel from './Label.vue'
-  // function getByteLen (val) {
-  //   let len = 0
-  //   for (let i = 0; i < val.length; i++) {
-  //     let length = val.charCodeAt(i)
-  //     if (length >= 0 && length <= 128) {
-  //       len += 1
-  //     } else {
-  //       len += 2
-  //     }
-  //   }
-  //   return len
-  // }
+
   export default {
     name: 'SegiFormInput',
     components: {FormLabel},
     props: {
+
       /* 公共 */
       inputType: {
         type: String,
@@ -70,31 +147,37 @@
         type: [Number, String],
         default: 2
       },
+
       // 是否外嵌格式
       outside: {
         type: Boolean,
         default: true
       },
+
       // 是否必填
       required: {
         type: Boolean,
         default: false
       },
+
       // 是否数字必填，验证数字使用（部分情况，数字必填但又没有*，无法用required），数字为空时，设置为最小值
       numRequired: {
         type: Boolean,
         default: false
       },
+
       // 是否不可编辑
       disabled: {
         type: Boolean,
         default: false
       },
+
       // label文本
       label: {
         type: String,
         default: ''
       },
+
       // 圆角
       radius: {
         type: String,
@@ -119,6 +202,7 @@
         type: String,
         default: '40px'
       },
+
       // label宽度
       labelWidth: {
         type: String,
@@ -132,6 +216,7 @@
         type: Boolean,
         default: true
       },
+
       /* 内嵌格式icon */
       labelIcon: {
         type: String,
@@ -144,10 +229,12 @@
         type: Boolean,
         default: false
       },
+
       /* 最小长度 */
       inputMinLenth: {
         type: Number
       },
+
       /* 输入字段的最大长度 */
       inputMaxLength: {
         type: Number,
@@ -162,16 +249,19 @@
           return {}
         }
       },
+
       /* 是否警示输入不正确（边框变红） */
       isError: {
         type: Boolean,
         default: false
       },
+
       /* 是否点击enter时，进行查询 */
       query: {
         type: Boolean,
         default: false
       },
+
       /* disabled两种样式：label、common, 分别是文本、正常灰色背景 */
       disabledStyle: {
         type: String,
@@ -183,10 +273,6 @@
           return null
         }
       }
-//      isDebounce: {
-//        type: Boolean,
-//        default: true
-//      }
     },
     data () {
       return {
@@ -213,70 +299,28 @@
     watch: {
       value (val) {
         this.val = val
-//        replace(/px/, '')
-//        console.log(val)
-//        var itv = ''
-//        var self = this
-//        if (self.inputType && self.inputType === 'textarea' && val === '') {
-//          var elem = self.$el.getElementsByTagName('textarea')[0]
-//          elem.style.height = '64px'
-//        }
-//        self.$nextTick(function () {
-//          var maxHeight = parseInt(self.textareaHeight.replace(/px/, ''))
-//          if (self.inputType && self.inputType === 'textarea') {
-//            /* 高度 */
-//            var elem = self.$el.getElementsByTagName('textarea')[0]
-//            var conpensate = 2
-//            if (elem.scrollHeight >= 64 && elem.scrollHeight <= maxHeight) {
-//              var temp = 0
-//              itv = setInterval(function () {
-// //              elem.style.opacity = 0
-//                elem.style.height = elem.scrollHeight + conpensate + 'px'
-//                if (temp === elem.style.height || elem.scrollHeight <= 64) {
-//                  clearItv()
-//                  if (elem.scrollHeight <= 64) {
-//                    elem.style.height = '64px'
-//                  }
-// //                elem.style.height = elem.scrollHeight + conpensate + 'px'
-// //                elem.style.opacity = 1
-//                } else {
-//                  temp = elem.style.height
-//                }
-//              })
-//            } else if (elem.scrollHeight > maxHeight) {
-//              elem.style.height = maxHeight + 'px'
-//            } else if (elem.scrollHeight < 64 && elem.scrollHeight > 0) {
-//              elem.style.height = '64px'
-//            } else {
-//              console.log('error')
-//            }
-//          }
-//        })
-//        function clearItv () {
-//          clearInterval(itv)
-//        }
       }
     },
     methods: {
       validate () {
         this.errorTip = ''
+
         if (this.disabled) {
           return
         }
+
         if (this.required && this.val.length === 0) {
           this.errorTip = this.label ? '请输入' + this.label : this.holder
           return true
         }
         let rule = this.rule
         if (rule !== null) {
-          // if ('len' in rule && (getByteLen(this.val) < rule.len.min || getByteLen(this.val) > rule.len.max)) {
-          //   this.errorTip = rule.len.message
-          //   return true
-          // }
+       
           if ('len' in rule && (this.val.length < rule.len.min || this.val.length > rule.len.max)) {
             this.errorTip = rule.len.message
             return true
           }
+
           if ('reg' in rule && !rule.reg.expression.test(this.val)) {
             this.errorTip = rule.reg.message
             return true
@@ -301,20 +345,13 @@
         }
       },
       updateValue: function (val, type) {
-        // this.validate()
         this.val = val
         this.$emit('input', val)
-        // this.$nextTick(() => {
-        //   this.validate()
-        // })
         this.validate()
       },
-//      updateValue: _.debounce(function (val, type) {
-//        this.val = val
-//        this.$emit('input', val)
-//      }, 500),
       validateNumber (val) {
         let value
+
         if (val === '') {
           value = this.numRequired && this.min ? this.min : ''
         } else if (!isNaN(val)) {
@@ -330,9 +367,6 @@
           value = this.min ? this.min : ''
           console.log(value)
         }
-        /* if (this.float) {
-          value = parseFloat(this.value).toFixed(Number(this.fix))
-        } */
         this.val = value
         this.$emit('input', value)
       },
@@ -342,6 +376,7 @@
       delImg (evt) {
         this.$emit('delImg', evt)
       },
+
       // 点击键盘enter，进行查询
       queryData () {
         if (!this.query) {
@@ -353,8 +388,6 @@
     mounted () {
       var self = this
       if (self.inputType && self.inputType === 'textarea') {
-//        var elem = self.$el.getElementsByTagName('textarea')[0]
-//        elem.style.height = '40px'
       }
     }
   }
@@ -362,6 +395,7 @@
 
 <style scoped lang="less">
 @import '../assets/less/variables.less';
+
 .tip-text{
   color:@extra-light-black;
   font-size: 12px;

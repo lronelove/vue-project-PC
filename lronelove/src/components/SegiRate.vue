@@ -17,8 +17,17 @@
     <div class="clearfix">
       <span v-if="showLabel" style="float: left;padding-right: 5px;line-height: 28px;height: 28px" :style="{width: labelWidth}">{{label}}</span>
       <span class="rate" style="float: left;line-height: 28px;height: 28px" :style="{'cursor': disabled ? 'auto': 'pointer', width: inputWidth}">
-        <span v-for="val in 5" @click="selectVal(val)" @mouseenter="enter(val)" @mouseleave="leave(val)">
-          <i class="iconfont" style="display: inline-block;padding-right: 4px;font-size: 18px;" :class="{'active': showColor(val), 'icon-star': showColor(val), 'icon-star-grey': !showColor(val), 'disabled': disabled}"></i>
+        <span 
+          v-for="val in 5" 
+          :key="val" 
+          @click="selectVal(val)" 
+          @mouseenter="enter(val)" 
+          @mouseleave="leave(val)">
+          <i 
+            class="iconfont" 
+            style="display: inline-block;padding-right: 4px;font-size: 18px;" 
+            :class="{'active': showColor(val), 'icon-star': showColor(val), 'icon-star-grey': !showColor(val), 'disabled': disabled}">
+          </i>
         </span>
       </span>
     </div>
@@ -27,6 +36,7 @@
 
 <script type="text/javascript">
   import '../assets/iconfont/iconfont.css'
+  
   export default {
     props: {
       value: {

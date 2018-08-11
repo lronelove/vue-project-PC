@@ -15,7 +15,12 @@ toggleDrawer () {
 }
 -->
 <template>
-  <div @mouseup="stopDragDrawer($event)" @mousemove="doDragDrawer($event)" class="segi-drawer" :class="{resizing: isResizing}" :style="{cursor: isResizing ? 'w-resize': '' , padding: show ? '20px': getPadding()}">
+  <div 
+    @mouseup="stopDragDrawer($event)" 
+    @mousemove="doDragDrawer($event)" 
+    class="segi-drawer" 
+    :class="{resizing: isResizing}"
+    :style="{cursor: isResizing ? 'w-resize': '' , padding: show ? '20px': getPadding()}">
     <!--页面整体-->
     <div class="segi-main" :style="pushMain()">
       <!--主体内容-->
@@ -69,36 +74,43 @@ export default {
     }
   },
   props: {
+
     // drawer位置，可以是'left','right','top','bottom'
     pos: {
       type: String,
       default: 'left'
     },
+
     // 整体的min-height,如82vh
     minHeight: {
       type: String,
       default: '700px'
     },
+
     // drawer宽度
     drawerWidth: {
       type: String,
       default: '300px'
     },
+
     // drawer高度
     drawerHeight: {
       type: String,
       default: '100%'
     },
+
     // drawer是否显示
     show: {
       type: Boolean,
       default: false
     },
+
     // drawer标题
     title: {
       type: String,
       default: ''
     },
+
     // drawer标题字体大小
     titleSize: {
       type: String,
@@ -108,31 +120,37 @@ export default {
       type: String,
       default: 'glyphicon glyphicon-th-large'
     },
+
      // 头部文字对齐方式，text-align
     headerAlign: {
       type: String,
       default: 'left'
     },
+
     // push 是否用push样式，push为false时，drawer覆盖到页面上；push为true时，页面原来内容被推动
     push: {
       type: Boolean,
       default: true
     },
+
     // 是否有遮罩样式
     mask: {
       type: Boolean,
       default: false
     },
+
     // 是否有头部
     header: {
       type: Boolean,
       default: true
     },
+
     // 是否有侧边滑块
     slider: {
       type: Boolean,
       default: true
     },
+
     // 是否有关闭按键
     close: {
       type: Boolean,
@@ -141,12 +159,10 @@ export default {
   },
   methods: {
     startDragDrawer (e) {
-//      let leftWidth = this.leftWidth.indexOf('px') !== -1 ? parseInt(this.leftWidth, 10) : 250
       if (this.$refs.drawerLeft.scrollWidth >= this.minWidth - 1) {
         this.isResizing = true
         this.lastDownX = e.clientX
       }
-//      console.log('startDrag', e.clientX)
     },
     doDragDrawer (e) {
       if (!this.isResizing) {
@@ -157,7 +173,6 @@ export default {
       } else {
         this.leftWidth = this.maxWidth + 'px'
       }
-//      console.log('doDrag', 'scrollWidth', this.$refs.drawerLeft.scrollWidth, 'clientX', e.clientX - this.lastDownX)
     },
     stopDragDrawer (e) {
       this.isResizing = false
@@ -183,6 +198,7 @@ export default {
         }
       }
     },
+
     // 根据pos值，返回不同的class
     drawPos () {
       switch (this.pos) {
@@ -198,6 +214,7 @@ export default {
           return 'drawer-left'
       }
     },
+
     // 根据pos值，返回不同的icon
     iconType () {
       switch (this.pos) {
@@ -213,6 +230,7 @@ export default {
           return this.show ? 'glyphicon-chevron-left' : 'glyphicon-chevron-right'
       }
     },
+
     // push
     pushMain () {
       if (!this.push) {
@@ -233,15 +251,18 @@ export default {
         }
       }
     },
+
     // 打开drawer
     showDrawer () {
       console.log('show')
       this.$emit('showDrawer')
     },
+
     // 关闭drawer
     hideDrawer () {
       this.$emit('hideDrawer')
     },
+
     // 打开/关闭drawer
     toggleDrawer () {
       this.$emit('toggleDrawer')
@@ -252,6 +273,7 @@ export default {
 
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   .dragLine{
     width: 10px;
     height: 100%;

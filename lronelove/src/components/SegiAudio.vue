@@ -27,31 +27,37 @@ export default {
       type: Boolean,
       default: true
     },
+
     // 资源链接
     value: {
       type: String,
       default: ''
     },
+
     // 标签长度
     labelWidth: {
       type: String,
       default: '90px'
     },
+
     // 标签内容
     label: {
       type: String,
       default: ''
     },
+
     // download，是否有下载按键
     download: {
       type: Boolean,
       default: false
     },
+
     // downLoad icon，下载图标
     icon: {
       type: String,
       default: 'glyphicon glyphicon-save'
     },
+
     // downLoadText
     downloadText: {
       type: String,
@@ -63,6 +69,7 @@ export default {
 
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   .play-audio {
     font-size:0px;
   }
