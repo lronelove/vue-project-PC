@@ -1,6 +1,6 @@
 <template>
   <div class='hello'>
-    <div v-for="key in obj">{{obj[key]}}</div>
+    <div v-for="key in obj" :key="key.toString()">{{obj[key]}}</div>
   </div>
 </template>
 

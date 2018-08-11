@@ -26,16 +26,19 @@
         <div class="menu-title">{{item.title}}</div>
         <div class="menu-detail clearfix">
           <!--menu中的一项：链接、快捷功能-->
-          <div style="position:relative;display:inline-block" class="pull-left" v-for="(subitem,index) in submenulist[index]">
+          <div 
+            style="position:relative;display:inline-block" 
+            class="pull-left" 
+            v-for="(subitem,index) in submenulist[index]"
+            :key="index"
+            >
             <a @click.prevent="showtab(subitem)" class="subitem" :key="index">{{subitem.text}}</a>
             <span class="glyphicon glyphicon-plus plus" @click="showShortcut(subitem)"></span>
-            <!--<span class="glyphicon glyphicon-plus plus" @mouseover="showTip" @mouseout="hideTip" @click="showShortcut(subitem)"></span>-->
             <span class="tip">添加快捷功能</span>
           </div>
         </div>
       </li>
     </ul>
-    <!--<div class="tip" :style="tipStyle">添加快捷功能</div>-->
   </div>
 </template>
 
@@ -43,17 +46,6 @@
 export default {
   name: 'nav-bar-item',
   props: [ 'icon', 'iconColor', 'src', 'title', 'menulist', 'submenulist' ],
-  /* 取消用js控制tip位置与显示，会导致在菜单快速移动鼠标时，菜单和导航乱跳转 */
-  /* data () {
-    return {
-      tipStyle: {
-        opacity: '0',
-        left: '900px',
-        top: '120px',
-        position: 'absolute'
-      }
-    }
-  }, */
   methods: {
     showtab (subitem) {
       this.$emit('showtab', subitem)
@@ -61,21 +53,6 @@ export default {
     showShortcut (subitem) {
       this.$emit('showShortcut', subitem)
     },
-    /* getMousePos (event) {
-      let e = event || window.event
-      return {x: e.clientX, y: e.clientY}
-    },
-    showTip (e) {
-      let pos = this.getMousePos(e)
-      let x = pos.x - 70
-      let y = pos.y - 10
-      this.tipStyle.opacity = '1'
-      this.tipStyle.left = x + 'px'
-      this.tipStyle.top = y + 'px'
-    },
-    hideTip (e) {
-      this.tipStyle.opacity = '0'
-    }, */
     showMenu () {
       this.menuStyle.display = 'block'
     },

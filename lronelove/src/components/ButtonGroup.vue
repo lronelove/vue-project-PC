@@ -31,10 +31,31 @@ array: Array类型，按钮组的数组
 <template>
   <div>
     <div class="button-group" v-if="isInput">
-      <input type="button" class="btn btn-text" :style="{marginRight: marginRight}" v-for="a in array" :key="a.id" :class="a.btnClass" @click="send(a.func)" :value="a.name" :disabled="a.disabled">
+      <input 
+      type="button" 
+      class="btn btn-text" 
+      :style="{marginRight: marginRight}" 
+      v-for="a in array" 
+      :key="a.id" 
+      :class="a.btnClass" 
+      @click="send(a.func)" 
+      :value="a.name" 
+      :disabled="a.disabled"
+      >
     </div>
     <div class="button-group" v-else>
-      <a type="button" class="btn btn-text marg" :style="{marginRight: marginRight}" v-for="a in array" :class="a.btnClass" :href="a.href" @click.prevent="send(a.func)">{{ a.name }}</a>
+      <a 
+      type="button" 
+      class="btn btn-text marg" 
+      :style="{marginRight: marginRight}" 
+      v-for="a in array" 
+      :class="a.btnClass" 
+      :href="a.href" 
+      @click.prevent="send(a.func)"
+      :key="a.id"
+      >
+      {{ a.name }}
+      </a>
     </div>
   </div>
 </template>

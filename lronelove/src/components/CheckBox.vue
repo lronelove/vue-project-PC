@@ -22,7 +22,12 @@
       <!--全选-->
       <span class="bottom" :class="{block: allBlock, height: labelHeight}" v-if="all" v-show="options.length">
         <label class="checkbox-label" :class="{checkboxDisabled:disabled}">
-          <input type="checkbox" :disabled="disabled" v-model="allSelection" :class="{half: value.length < options.length && value.length > 0}"/>
+          <input 
+          type="checkbox" 
+          :disabled="disabled" 
+          v-model="allSelection" 
+          :class="{half: value.length < options.length && value.length > 0}"
+          />
           <span :style="{width: boxWidth, height: boxWidth, lineHeight: iconHeight}"></span>
           <span class="checkbox-text" :style="{lineHeight: labelHeight, minWidth: textWidth}">全部</span>
         </label>
@@ -43,6 +48,7 @@
 <script>
 import tabArr from '../utils/tabArr'
 import FormLabel from './Label.vue'
+
 export default {
   components: {FormLabel},
   props: {

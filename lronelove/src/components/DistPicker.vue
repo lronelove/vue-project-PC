@@ -1,11 +1,32 @@
 <template>
   <div class="vue-dist-picker clearfix" :style="{height:inputHeight, width:getWidth()}" v-clickoutside="endChoice" >
+    
     <!--外嵌格式 input-->
     <div v-if="outside" class="hit clearfix">
-      <label class="outsideLabel" v-if="label" :style="{height: inputHeight ,lineHeight: inputHeight, width: labelWidth}"><span v-show="required">*</span>{{ label }}</label>
+      <label 
+        class="outsideLabel" 
+        v-if="label" 
+        :style="{height: inputHeight ,lineHeight: inputHeight, width: labelWidth}"
+      >
+        <span v-show="required">*</span>
+        {{ label }}
+        </label>
       <div class="hit-right"  @click="toggle">
-        <input type="text" class="form-control" v-model="showText" :placeholder="holder" :name="inputName" :id="inputId" :style="{borderRadius: radius, width: inputWidth, height: inputHeight}" readonly>
-        <button type="button" class="btn btn-default dropdown-toggle" :style="{borderRadius: radius, height: inputHeight, width: buttonWidth, marginLeft: -buttonWidth}">
+        <input 
+          type="text" 
+          class="form-control" 
+          v-model="showText" 
+          :placeholder="holder" 
+          :name="inputName" 
+          :id="inputId" 
+          :style="{borderRadius: radius, width: inputWidth, height: inputHeight}" 
+          readonly
+        >
+        <button 
+          type="button" 
+          class="btn btn-default dropdown-toggle" 
+          :style="{borderRadius: radius, height: inputHeight, width: buttonWidth, marginLeft: -buttonWidth}"
+        >
           <span class="glyphicon glyphicon-map-marker"></span>
         </button>
       </div>
@@ -13,7 +34,16 @@
     <!--内嵌格式 input-->
     <div v-else class="clearfix">
       <label class="input segi_formInput" @click="toggle" :style="{height:inputHeight}">
-        <input @keyup.esc.prevent="endChoice" type="text" class="form-control" v-model="showText"  :placeholder="holder" :name="inputName" :id="inputId" :style="{width: inputWidth, height: inputHeight, borderRadius: radius, paddingLeft: labelWidth}" readonly>
+        <input 
+          @keyup.esc.prevent="endChoice" 
+          type="text" 
+          class="form-control" 
+          v-model="showText"  
+          :placeholder="holder" 
+          :name="inputName" 
+          :id="inputId" 
+          :style="{width: inputWidth, height: inputHeight, borderRadius: radius, paddingLeft: labelWidth}" 
+          readonly>
         <span class="labelBox" :style="{height: inputHeight, lineHeight: inputHeight, width: labelWidth}">
           <span class="labelText"><i :class="labelIcon"></i>{{label}}<span v-show="required" style="color:red">*</span></span>
         </span>
@@ -23,8 +53,6 @@
       </label>
     </div>
 
-    <!--<input type="text" autocomplete="off" disableautocomplete :name="field" :id="field" :placeholder="placeholder" :value="showName" v-model="showName"
-           @focus="toggle" @keypress="toggle" @blur="endChoice" ref:input>-->
     <!--选择面板-->
     <div class="drop" v-show="showPanel" :style="{marginLeft: getMargin()}">
       <div class="vdp-panel" :style="{width: inputWidth}">
@@ -38,24 +66,47 @@
         <div style="width: 100%;height: 2px;background: #20A0FF;"></div>
         <div class="vdp-list">
           <ul v-show="activatedTag===1">
-            <li v-for="item in provList" @click="choiceProv(item.regionId)" :title="item.name">{{ item.name }}</li>
+            <li v-for="(item, index) in provList" 
+            @click="choiceProv(item.regionId)"
+            :key="index" 
+            :title="item.name">
+            {{ item.name }}
+            </li>
             <div v-show="provList instanceof Array && !provList.length" class="tip">{{tip1}}</div>
           </ul>
           <ul v-show="activatedTag===2">
-            <li v-for="item in cityList" @click="choiceCity(item.regionId)" :title="item.name">{{ item.name }}</li>
+            <li 
+              v-for="(item, index) in cityList" 
+              :key="index" 
+              @click="choiceCity(item.regionId)" 
+              :title="item.name">
+              {{ item.name }}
+            </li>
             <div v-show="cityList instanceof Array && !cityList.length" class="tip">{{tip2}}</div>
           </ul>
           <ul v-show="activatedTag===3">
-            <li v-for="item in distList" @click="choiceDist(item.regionId)" :title="item.name">{{ item.name }}</li>
+            <li 
+              v-for="(item, index) in distList" 
+              :key="index" 
+              @click="choiceDist(item.regionId)" 
+              :title="item.name">
+              {{ item.name }}
+            </li>
             <div v-show="distList instanceof Array && !distList.length" class="tip">{{tip3}}</div>
           </ul>
           <ul v-show="activatedTag===4">
-            <li v-for="item in communityList" @click="choiceCommunity(item.communityId)" :title="item.name">{{ item.name }}</li>
+            <li 
+              v-for="(item, index) in communityList" 
+              :key="index" 
+              @click="choiceCommunity(item.communityId)" 
+              :title="item.name">
+              {{ item.name }}
+            </li>
             <div v-show="communityList instanceof Array && !communityList.length" class="tip">{{tip4}}</div>
           </ul>
           <div class="loading" v-show="loading">
             <ul class="loading-animation">
-              <li v-for="i in 5"></li>
+              <li v-for="i in 5" :key="i"></li>
             </ul>
           </div>
         </div>
@@ -67,29 +118,17 @@
 </template>
 
 <script>
-// import DIST_PICKER_LIST from '../data/china-dist-data.json'
 import clickoutside from '../utils/directive/clickoutside'
 import * as api from '../api'
 import { SHOW_TOAST } from '../store/types'
-/* const collection = {
-    // 通过id获取集合条目，取得条目
-  get (arr, id, field = 'id') {
-    let res = null
-    if (typeof arr === 'object' && typeof arr.length !== 'undefined' && arr.length > 0) {
-      arr.forEach((item) => {
-        if (item[field] === id) {
-          res = item
-        }
-      })
-    }
-    return res
-  }
-} */
+
 const collection = {
   get (arr, id, field = 'regionId') {
     let res = {field: '', name: '请选择'}
+
     if (arr instanceof Array && arr.length) {
       let len = arr.length
+
       for (let i = 0; i < len; i++) {
         if (arr[i][field] === id) {
           res = arr[i]
@@ -108,62 +147,74 @@ export default {
       type: [String, Number],
       default: ''
     },
+
     // input的props
     /* 是否外嵌样式 */
     outside: {
       type: Boolean,
       default: true
     },
+
     /* 布尔类型，是否必填项，若为true则在label左上角显示一个红色* */
     required: {
       type: Boolean,
       default: false
     },
+
     /* 字符串类型，输入框前的标签文本 */
     label: {
       type: String,
       default: ''
     },
+
     /* 字符串类型，输入框里面的placeholder. */
     holder: {
       type: String,
       default: '请选择小区'
     },
+
     /* 输入框 name属性 */
     inputName: {
       type: String,
       default: ''
     },
+
     /* 输入框 id */
     inputId: {
       type: String,
       default: ''
     },
+
     /* 各部分的圆角 */
     radius: {
       type: String,
       default: '5px'
     },
+
     /* label宽度 和 输入框的margin-left，不能为auto */
     labelWidth: {
       type: String,
       default: '109px'
     },
+
     /* 输入框宽度:160px-xx，注意：下拉菜单min-width:160px */
     inputWidth: {
       type: String,
       default: '381px'
     },
+
     /* 输入框高度:30px-50px，注意：对于整个datePicker，max-height:50px */
     inputHeight: {
       type: String,
       default: '43px'
     },
+
     /* 按键宽度 */
     buttonWidth: {
       type: String,
       default: '43px'
     },
+
     /* 内嵌格式的icon */
     labelIcon: {
       type: String,
@@ -195,55 +246,12 @@ export default {
     }
   },
   computed: {
-    /* getTitle () {
-      switch (this.activatedTag) {
-        case 1:
-          return '选择省'
-        case 2:
-          return '选择市'
-        case 3:
-          return '选择区'
-        case 4:
-          return '选择小区'
-        default:
-          return '选择地址'
-      }
-    }, */
-    /* cityList () {
-      let {
-        provId
-      } = this
-      if (provId && typeof DIST_PICKER_LIST[provId] !== 'undefined') {
-        return DIST_PICKER_LIST[provId]
-      } else {
-        return []
-      }
-    },
-    distList () {
-      let {
-        cityId
-      } = this
-      if (cityId && typeof DIST_PICKER_LIST[cityId] !== 'undefined') {
-        return DIST_PICKER_LIST[cityId]
-      } else {
-        return []
-      }
-    },
-    communityList () {
-      let {
-        communityId
-      } = this
-      if (communityId && typeof DIST_PICKER_LIST[communityId] !== 'undefined') {
-        return DIST_PICKER_LIST[communityId]
-      } else {
-        return []
-      }
-    }, */
     currProv () {
       let {
         provList,
         provId
       } = this
+
       if (provId) {
         return collection.get(provList, provId)
       } else {
@@ -258,6 +266,7 @@ export default {
         cityList,
         cityId
       } = this
+
       if (cityList.length > 0 && cityId) {
         return collection.get(cityList, cityId)
       } else {
@@ -272,6 +281,7 @@ export default {
         distList,
         distId
       } = this
+
       if (distList.length > 0 && distId) {
         return collection.get(distList, distId)
       } else {
@@ -286,6 +296,7 @@ export default {
         communityList,
         communityId
       } = this
+
       if (communityList.length > 0 && communityId) {
         return collection.get(communityList, communityId, 'communityId')
       } else {
@@ -303,12 +314,12 @@ export default {
         currCommunity,
         value
       } = this
+
       if (currProv.regionId && currCity.regionId && currDist.regionId && currCommunity.communityId && value) {
         return currProv.name + '-' + currCity.name + '-' + currDist.name + '-' + currCommunity.name
       } else {
         return ''
       }
-     // return this.currProv.name + '-' + this.currCity.name + '-' + this.currDist.name + '-' + this.currCommunity.name
     }
   },
   methods: {
@@ -320,6 +331,7 @@ export default {
         return 0
       }
     },
+
     /* 不同情况的整体宽度 */
     getWidth () {
       if (this.outside) {
@@ -360,14 +372,17 @@ export default {
       this.$emit('input', this.communityId)
       console.log(this.currCommunity)
     },
+
     // 打开/关闭面板
     toggle (e) {
       this.showPanel = !this.showPanel
+
       // 如果打开面板，且provList是[]，则查询省份列表
       if (this.showPanel && !this.provList.length) {
         this.queryProv()
       }
     },
+
     // 关闭省市区面板
     endChoice (e) {
       this.showPanel = false
@@ -378,8 +393,10 @@ export default {
     },
     queryProv () {
       this.loading = true
+
       api.queryProv().then(res => {
         this.loading = false
+
         if (Number(res.data.code) === 0) {
           if (res.data.data.list && (res.data.data.list !== 'undefined')) {
             this.provList = res.data.data.list
@@ -403,11 +420,14 @@ export default {
     queryCity (id) {
       this.cityList = []
       this.loading = true
+
       api.queryCity(id).then(res => {
         this.loading = false
+
         if (Number(res.data.code) === 0) {
           if (res.data.data.list && (res.data.data.list !== undefined)) {
             this.cityList = res.data.data.list
+
             if (res.data.data.list instanceof Array && !res.data.data.list.length) {
               this.tip2 = '没有可选项'
             } else if (res.data.data.list instanceof Array && res.data.data.list.length) {
@@ -428,11 +448,14 @@ export default {
     queryDist (id) {
       this.distList = []
       this.loading = true
+
       api.queryDist(id).then(res => {
         this.loading = false
+
         if (Number(res.data.code) === 0) {
           if (res.data.data.list && (res.data.data.list !== undefined)) {
             this.distList = res.data.data.list
+
             if (res.data.data.list instanceof Array && !res.data.data.list.length) {
               this.tip3 = '没有可选项'
             } else if (res.data.data.list instanceof Array && res.data.data.list.length) {
@@ -453,11 +476,14 @@ export default {
     queryCommunity (id) {
       this.communityList = []
       this.loading = true
+
       api.queryCommunity(id).then(res => {
         this.loading = false
+
         if (Number(res.data.code) === 0) {
           if (res.data.data.list && (res.data.data.list !== undefined)) {
             this.communityList = res.data.data.list
+
             if (res.data.data.list instanceof Array && !res.data.data.list.length) {
               this.tip4 = '没有可选项'
             } else if (res.data.data.list instanceof Array && res.data.data.list.length) {
@@ -486,13 +512,6 @@ export default {
   watch: {
     'value' (val) {
       if (!val) {
-        /* if (this.activatedTag === 4) {
-          this.provId = ''
-          this.cityId = ''
-          this.distId = ''
-          this.communityId = ''
-          this.activatedTag = 1
-        } */
       }
     }
   }

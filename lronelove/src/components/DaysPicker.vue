@@ -14,11 +14,11 @@ pattern: String类型，三种模式，对应的是[day,week,month](默认为按
       <div class="top">
         <span><input type="checkbox" :checked="all" @change="allChoose"/>全选/反选</span>
         <div class="bottom-table">
-          <div class="unit" v-for="(item, index) in days">
+          <div class="unit" v-for="(item, index) in days" :key="index">
             <input type="checkbox" v-model="item.checked" @change="checkDates(index)">
             <p v-if="pattern === 'week'">{{ item.name }}</p>
           </div>
-          <div class="date-unit" v-if="pattern === 'month'" v-for="(item, index) in dates">
+          <div class="date-unit" v-if="pattern === 'month'" v-for="(item, index) in dates" :key="index">
             <input type="checkbox" v-model="item.checked">
             <p>{{ index + 1 }}日</p>
           </div>
@@ -38,11 +38,11 @@ pattern: String类型，三种模式，对应的是[day,week,month](默认为按
       <div class="day-bottom">
         工作
         <select v-model.trim="work">
-          <option v-for="d in 7">{{ d }}天</option>
+          <option v-for="d in 7" :key="d">{{ d }}天</option>
         </select>
         休息
         <select v-model.trim="rest">
-          <option v-for="d in 7">{{ d }}天</option>
+          <option v-for="d in 7" :key="d">{{ d }}天</option>
         </select>
       </div>
     </div>
@@ -82,37 +82,6 @@ pattern: String类型，三种模式，对应的是[day,week,month](默认为按
     components: {
       DatePicker
     },
-//    computed: {
-//      dates () {
-//        if (this.date) {
-//          this.result = _.cloneDeep(this.date)
-//        } else {
-//          for (let i = 0; i < 31; i++) {
-//            let temp = {
-//              checked: false
-//            }
-//            this.result.push(temp)
-//          }
-//        }
-//        return this.result
-//      },
-//      days () {
-//        if (this.day) {
-//          this.result = _.cloneDeep(this.day)
-//        } else {
-//          this.result = [
-//            {name: '星期一', checked: false},
-//            {name: '星期二', checked: false},
-//            {name: '星期三', checked: false},
-//            {name: '星期四', checked: false},
-//            {name: '星期五', checked: false},
-//            {name: '星期六', checked: false},
-//            {name: '星期日', checked: false}
-//          ]
-//        }
-//        return this.result
-//      }
-//    },
     data () {
       return {
         all: false,
@@ -149,6 +118,7 @@ pattern: String类型，三种模式，对应的是[day,week,month](默认为按
     methods: {
       allChoose () {
         this.all = !this.all
+
         for (let i = 0; i < this.days.length; i++) {
           if (this.all) {
             this.$set(this.days, i, {checked: true})
@@ -156,6 +126,7 @@ pattern: String类型，三种模式，对应的是[day,week,month](默认为按
             this.$set(this.days, i, {checked: false})
           }
         }
+
         for (let i = 0; i < this.dates.length; i++) {
           if (this.all) {
             this.$set(this.dates, i, {checked: true})
@@ -166,17 +137,13 @@ pattern: String类型，三种模式，对应的是[day,week,month](默认为按
       },
       checkDays (index) {
         this.$set(this.days, (index % 7), {checked: true})
+
         for (let j = index; j < this.dates.length; j = j + 7) {
           if (!this.dates[j].checked) {
             this.$set(this.days, (j % 7), {checked: false})
             break
           }
         }
-//        this.dates.every((item, id) => {
-//          if ((id % 7) === (index % 7) && item.checked === this.dates[index].checked) {
-//            return true
-//          }
-//        }) && (this.$set(this.days, (index % 7), {checked: this.dates[index]}))
       },
       checkDates (index) {
         for (let j = index; j < this.dates.length; j = j + 7) {

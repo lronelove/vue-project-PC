@@ -72,26 +72,47 @@ data () {
             <!--日历选择页-->
             <div class="calendar-panel-content" v-show="stage === 0" v-if="datePicker">
               <div class="calendar-header">
-                <span v-for="item of weeks" v-text="item"></span>
+                <span v-for="(item, index) of weeks" :key="index" v-text="item"></span>
               </div>
               <div class="calendar-content">
-                <template v-for="(item,index) of dates">
-                  <a class="prev-month" v-if="index < firstDay - 1"  v-text="item"></a>
-                  <a @click.prevent="selectDate($event,isAvailable(item))" :class="[{selected: isSelected && item === Number(selectDay) && index > firstDay - 2 && index < lastDay + firstDay - 1, today: isToday && item === currentDay && index > firstDay - 2 && index < lastDay + firstDay - 1},isAvailable(item)]" v-if="index > firstDay - 2 && index < lastDay + firstDay - 1" v-text="(isToday && item === currentDay && index > firstDay - 2 && index < lastDay + firstDay - 1) ? '今天' : item" :data-index="item"></a>
-                  <a class="next-month" v-if="index > lastDay + firstDay - 2" v-text="item"></a>
-                </template>
+                  <a v-for="(item,index) of dates" :key="index" class="prev-month" v-if="index < firstDay - 1" v-text="item"></a>
+                  <a 
+                    v-for="(item,index) of dates" 
+                    :key="index"
+                    @click.prevent="selectDate($event,isAvailable(item))" 
+                    :class="[{selected: isSelected && 
+                      item === Number(selectDay) && 
+                      index > firstDay - 2 && 
+                      index < lastDay + firstDay - 1, today: isToday && 
+                      item === currentDay && 
+                      index > firstDay - 2 && 
+                      index < lastDay + firstDay - 1},isAvailable(item)]" 
+                    v-if="index > firstDay - 2 && index < lastDay + firstDay - 1" 
+                    v-text="(isToday && item === currentDay && 
+                      index > firstDay - 2 && 
+                      index < lastDay + firstDay - 1) ? '今天' : item" 
+                    :data-index="item"
+                  >
+                  </a>
+                  <a 
+                    v-for="(item,index) of dates" 
+                    :key="index" 
+                    class="next-month" 
+                    v-if="index > lastDay + firstDay - 2" 
+                    v-text="item">
+                  </a>
               </div>
             </div>
             <!--年份选择页-->
             <div class="calendar-year" v-show="stage === 1" v-if="datePicker">
               <ul>
-                <li v-for="item of yearList" v-text="item" @click="selectMonth(item)"></li>
+                <li v-for="item of yearList" :key="item.toString()" v-text="item" @click="selectMonth(item)"></li>
               </ul>
             </div>
             <!--月份选择页-->
             <div class="calendar-month" v-show="stage === 2" v-if="datePicker">
               <ul>
-                <li v-for="item of monthList" v-text="item" @click="render(item)"></li>
+                <li v-for="item of monthList" :key="item.toString()" v-text="item" @click="render(item)"></li>
               </ul>
             </div>
             <!--时间选择页-->
@@ -108,23 +129,62 @@ data () {
               <div class="calendar-time" style="position:relative;z-index:2;">
                 <div class="scrollbar" :id="id1" ref="hour" @wheel="scrollTime($event, 'hour')" @mousewheel="scrollTime($event, 'hour')" @DOMMouseScroll="scrollTime($event, 'hour')">
                   <ul class="calendar-hours">
-                    <li :style="{width: accurate === 'second' ? '70px' : '110px'}" class="hover" v-for="hr in hourList" v-text="hr" :class="{active: hour === hr}" @click.stop="select('hour', hr)"></li>
+                    <li 
+                      :style="{width: accurate === 'second' ? '70px' : '110px'}" 
+                      class="hover" 
+                      v-for="(hr, index) in hourList"
+                      :key="index" 
+                      v-text="hr" 
+                      :class="{active: hour === hr}" 
+                      @click.stop="select('hour', hr)"
+                      >
+                    </li>
                   </ul>
                 </div>
                 <div class="scrollbar" :id="id2" ref="minute" @wheel="scrollTime($event, 'minute')" @mousewheel="scrollTime($event, 'minute')" @DOMMouseScroll="scrollTime($event, 'minute')">
                   <ul class="calendar-minutes">
-                    <li :style="{width: accurate === 'second' ? '70px' : '110px'}" class="hover" v-for="m in minuteList" v-text="m" :class="{active: minute === m}" @click.stop="select('minute', m)"></li>
+                    <li 
+                      :style="{width: accurate === 'second' ? '70px' : '110px'}" 
+                      class="hover" 
+                      v-for="(m, index) in minuteList"
+                      :key="index" 
+                      v-text="m" 
+                      :class="{active: minute === m}" 
+                      @click.stop="select('minute', m)"
+                      >
+                    </li>
                   </ul>
                 </div>
-                <div class="scrollbar" v-if="accurate === 'second'" :id="id3" ref="second" @wheel="scrollTime($event, 'second')" @mousewheel="scrollTime($event, 'second')" @DOMMouseScroll="scrollTime($event, 'second')">
+                <div 
+                  class="scrollbar" 
+                  v-if="accurate === 'second'" 
+                  :id="id3" 
+                  ref="second" 
+                  @wheel="scrollTime($event, 'second')" 
+                  @mousewheel="scrollTime($event, 'second')" 
+                  @DOMMouseScroll="scrollTime($event, 'second')"
+                >
                   <ul class="calendar-seconds">
-                    <li class="hover" v-for="s in secondList" v-text="s" :class="{active: second === s}" @click.stop="select('second', s)"></li>
+                    <li 
+                      class="hover" 
+                      v-for="(s, index) in secondList" 
+                      v-text="s" 
+                      :class="{active: second === s}" 
+                      @click.stop="select('second', s)"
+                      :key="index"
+                    ></li>
                   </ul>
                 </div>
               </div>
             </div>
             <div class="calendar-panel-footer clearfix">
-              <div class="hour pull-right" v-if="timePicker && datePicker" v-show="stage === 0 || stage === 3 " @click="selectTime" style="cursor:pointer;">
+              <div 
+                class="hour pull-right" 
+                v-if="timePicker && datePicker" 
+                v-show="stage === 0 || stage === 3 " 
+                @click="selectTime" 
+                style="cursor:pointer;"
+              >
                 <span class="input-icon glyphicon glyphicon-time" v-if="datePicker && stage === 0"></span>
                 <span class="input-icon" style="width: 13px;height:14px;display:inline-block;" v-if="datePicker && stage === 3">
                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -156,19 +216,6 @@ data () {
       </div>
     </div>
     <form-label v-else :label="label" :value="computedDateTime" :labelWidth="labelWidth" :inputWidth="inputWidth"/>
-    <!--内嵌格式 input-->
-    <!--<div v-else class="clearfix">
-      <label class="input segi_formInput" @click="toggle" :style="{height:inputHeight}">
-        <input :disabled="disabled" @keyup.esc.prevent="hide" type="text" class="form-control" v-model="computedDateTime" :value="date" :placeholder="disabled ? '': holder" :name="inputName" :id="inputId" ref="inputRef" :style="{width: inputWidth, height: inputHeight, borderRadius: radius, paddingLeft: labelWidth}" readonly>
-        <span class="labelBox" :style="{height: inputHeight, lineHeight: inputHeight, width: labelWidth}">
-          <span class="labelText"><i :class="labelIcon"></i>{{label}}<span v-show="required" style="color:red">*</span></span>
-        </span>
-        <button v-if="!disabled" type="button" class="btn btn-default dropdown-toggle" :style="{borderRadius: radius, height: inputHeight, width: buttonWidth, marginLeft: -buttonWidth}">
-          <span :class="caret"></span>
-        </button>
-      </label>
-    </div>-->
-
   </div>
 </template>
 
@@ -342,13 +389,6 @@ export default {
   },
   computed: {
     // calendar计算属性
-   /* btnIcon () {
-      if (this.datePicker) {
-        return 'glyphicon glyphicon-calendar'
-      } else {
-        return 'glyphicon glyphicon-time'
-      }
-    }, */
     date () {
       return this.value ? _.cloneDeep(this.value) : new Date()
     },
@@ -371,19 +411,8 @@ export default {
       } else {
         return ''
       }
-      /* if (this.hour || this.minute || this.second) {
-        return `${h}:${m}:${s}`
-      } else {
-        return ''
-      } */
+    
     },
-    /* dateTimeValue () {
-      if (this.timePicker === true) {
-        return this.dateValue === '' ? '' : (this.dateValue + ' ' + this.timeValue)
-      } else {
-        return this.dateValue
-      }
-    }, */
     computedDateTime () {
       if (this.value) {
         let val
@@ -427,11 +456,13 @@ export default {
         this.rotate = null
       }
     },
+
     /* 隐藏选项栏 */
     hide () {
       this.showDatePicker = false
       this.stage = 0
     },
+
     /* 不同情况的下拉菜单margin-left */
     getMargin () {
       if (this.outside) {
@@ -440,6 +471,7 @@ export default {
         return 0
       }
     },
+
     /* 不同情况的整体宽度 */
     getDatePickerWidth () {
       if (this.outside) {
@@ -455,6 +487,7 @@ export default {
         return '10px'
       }
     },
+
     // calendar方法
     prevYear () {
       this.date.setFullYear(this.date.getFullYear() - 1)
@@ -488,44 +521,55 @@ export default {
       let months = this.date.getMonth()
       let firstDay = new Date(years, months, 1).getDay() // 当月第一天是星期几
       let lastDay = new Date(years, months + 1, 0).getDate() // 求出当月共有几天
+
       // 当月
       let count = 0
       let i = 1
       let index = firstDay - 1 - 1
+
       if (firstDay === 0) {
         index = 5
       }
+
       if (firstDay === 1) {
         index = 6
       }
       count = index // 如星期天，前两天就是星期五，5
+
       while (count++ < lastDay + index) { // count++,6
         dates[count] = i++  // dates[count]，放到数组的第7个位置，与星期天对应
       }
       // 上个月
       let prevLastDay = new Date(years, months, 0).getDate() // 上个月共有几天
       let prevCount = firstDay - 1
+
       if (firstDay === 0) {
         prevCount = 6
       }
+
       if (firstDay === 1) {
         prevCount = 7
       }
+
       while (prevCount--) {
         dates[prevCount] = prevLastDay--
       }
+
       // 下个月
       let nextI = 0
       let nextCount = 42 - lastDay - (firstDay - 1)
       let nextIndex = lastDay + firstDay - 1
+
       if (firstDay === 0) {
         nextCount = 42 - lastDay - 6
         nextIndex = lastDay + 6
       }
+
       if (firstDay === 1) {
         nextCount = 42 - lastDay - 7
         nextIndex = lastDay + 7
       }
+
       while (nextCount--) {
         dates[nextIndex + nextI] = nextI + 1
         nextI++
@@ -534,11 +578,12 @@ export default {
       this.year = this.date.getFullYear()
       this.month = this.date.getMonth() + 1
       this.today = this.date.getDate()
-      // this.selectDay = this.today
       this.firstDay = firstDay
+
       if (firstDay === 0) {
         this.firstDay = 7
       }
+
       if (firstDay === 1) {
         this.firstDay = 8
       }
@@ -574,19 +619,21 @@ export default {
     selectDate (e, type) {
       console.info('selectDate  sdlsjdlsjdljaljkldjlajdflkjsakf')
       const day = e.target.dataset.index
+
       if (!day || type === 'prev') {
         return
       }
       const date = new Date(this.date.getFullYear(), this.date.getMonth(), day)
       const value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`.replace(/\b(\w)\b/g, '0$1')
       this.dateValue = value
-      // this.$emit('input', new Date(dateTimeValue))
-      // this.$emit('input', new Date(this.computedDateTime))
       let dateTimeValue = this.updateDateTime()
+
       this.$emit('input', new Date(dateTimeValue))
       this.time = date.getTime()
       this.selectDay = value.substr(8, 2)
+
       if (!this.timePicker) this.showDatePicker = false
+
       if (this.timePicker) this.stage = 3
     },
     // 增加selectTime 和select方法
@@ -608,14 +655,13 @@ export default {
         this.second = value
         this.date.setSeconds(value)
       }
-      // this.$emit('input', new Date(dateTimeValue))
-      // this.$emit('input', new Date(this.computedDateTime))
       let dateTimeValue = this.updateDateTime()
       this.$emit('input', new Date(dateTimeValue))
     },
     scrollTime (e, type) {
       e.preventDefault()
       let wheelRange = -e.wheelDeltaY || e.deltaY || -e.wheelDelta || e.detail
+
       if (wheelRange > 0) {
         switch (type) {
           case 'hour':
@@ -651,36 +697,28 @@ export default {
       let now = new Date(this.year + '/' + this.month + '/' + item)
       let min = this.lastDateValue
       let max = this.maxValue
-      if ((this.lastDateValue && this.compareTime(now, min, 'date') < 0) || (this.maxValue && this.compareTime(now, max, 'date') > 0)) {
+      if ((this.lastDateValue && 
+          this.compareTime(now, min, 'date') < 0) || (this.maxValue && this.compareTime(now, max, 'date') > 0)) {
         return 'prev'
       } else {
         return 'available'
       }
-      // if (this.lastDateValue) {
-      //   let lastTime = this.lastDateValue.getTime()
-      //   let nextTime = this.year + '/' + this.month + '/' + item + ' 23:59:59'
-      //   nextTime = (new Date(nextTime)).getTime()
-      //   if (nextTime >= lastTime) {
-      //     return 'available'
-      //   } else {
-      //     return 'prev'
-      //   }
-      // } else {
-      //   return 'available'
-      // }
     },
     setValue () {
       if (this.value) {
         console.log('dateTime change')
+
         // 设置dateValue，才能更新选中日期，isSelected
         const value = `${this.value.getFullYear()}-${this.value.getMonth() + 1}-${this.value.getDate()}`.replace(/\b(\w)\b/g, '0$1')
         this.dateValue = value
         this.selectDay = this.value.getDate()
+
         // 设置hour,minute,second，更新时间面板
         this.hour = this.value.getHours()
         this.minute = this.value.getMinutes() < 10 ? '0' + this.value.getMinutes() : this.value.getMinutes()
         this.second = this.value.getSeconds() < 10 ? '0' + this.value.getSeconds() : this.value.getSeconds()
         this.time = this.value.getTime()
+
         // 设置date的year,month，调用getCal,才能更新年和月
         this.date.setFullYear(this.value.getFullYear())
         this.date.setMonth(this.value.getMonth())
@@ -688,6 +726,7 @@ export default {
       }
     }
   },
+
   // 增加watch，当第一个datePicker日期变化时，第二个关联的datePicker进行变化
   watch: {
     'value' (val) {
@@ -707,43 +746,43 @@ export default {
     },
     'lastDateValue' (val) {
       if (val) {
-        // let month = (val.getMonth() + 1) < 10 ? '0' + (val.getMonth() + 1) : (val.getMonth() + 1)
-        // let date = val.getDate() < 10 ? '0' + val.getDate() : val.getDate()
         let hour = val.getHours()
         let minute = val.getMinutes() < 10 ? '0' + val.getMinutes() : val.getMinutes()
         let second = val.getSeconds() < 10 ? '0' + val.getSeconds() : val.getSeconds()
         let lastTime = val.getTime()
         let nextTime
+
         if (this.dateValue !== '') { // 第二个日期已选择，再改变第一个日期
+
           // 第二个日期已选择时，computedDateTime不会是''，直接取时间
           nextTime = new Date(this.computedDateTime).getTime()
+
           if (!this.timePicker) this.showDatePicker = false
         } else if (this.dateValue === '') { // 选择第一个日期，未选择第二个日期
+
           // 如果computedDateTime不是''，比较第一个日期和computedDateTime
           if (this.computedDateTime) {
             nextTime = new Date(this.computedDateTime).getTime()
           } else {
+
             // computedDateTime是'',则无默认选项，翻页选择日期1时，应该让日期2也翻页，需重设年、月
             this.$emit('input', val) // 增加：当第一个日期选中，第二个日期为''，设置第二个日期=第一个日期
-//            console.log('lastval:', val, new Date(val))
             this.date.setFullYear(val.getFullYear())
             this.date.setMonth(val.getMonth())
             this.getCal()
           }
         }
+
         // 如果第一个日期大于第二个日期，则将第二个日期设置为第一个日期
         if (nextTime && lastTime > nextTime) {
           this.year = val.getFullYear()
           this.month = val.getMonth()
-          // this.dateValue = val.getFullYear() + '-' + month + '-' + date
           this.dateValue = `${val.getFullYear()}-${val.getMonth() + 1}-${val.getDate()}`.replace(/\b(\w)\b/g, '0$1')
           this.hour = hour
           this.minute = minute
           this.second = second
-          // this.$emit('input', new Date(this.computedDateTime))
           let dateTimeValue = this.updateDateTime()
           this.$emit('input', new Date(dateTimeValue))
-//          console.log('lastDateValue', new Date(dateTimeValue))
           this.time = lastTime
           this.selectDay = val.getDate()
           this.date.setFullYear(val.getFullYear())
@@ -766,32 +805,41 @@ export default {
     const nextYear = []
     const currentYear = new Date().getFullYear()
     let i = 0
+
     while (i++ < 10) {
       prevYear.unshift(currentYear - i)
     }
     i = 0
+
     while (i++ < 10) {
       nextYear.push(currentYear + i)
     }
     this.yearList = [...prevYear, currentYear, ...nextYear]
+
     // 月份
     i = 0
+
     while (i++ < 12) {
       this.monthList.push(`${i}月`)
     }
     // hours 增加时间
+
     i = -1
     while (i++ < 23) {
       this.hourList.push(i)
     }
+
     // minutes
     i = -1
+
     while (i++ < 59) {
       i = i < 10 ? '0' + i : i
       this.minuteList.push(i)
     }
+
     // seconds
     i = -1
+
     while (i++ < 59) {
       i = i < 10 ? '0' + i : i
       this.secondList.push(i)
@@ -804,6 +852,7 @@ export default {
 </script>
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   a{
    text-decoration:none;
   }
@@ -844,29 +893,6 @@ export default {
     }
   }
   /*增加.hour*/
-  /* .hour {
-    font-size:15px;
-    color:@extra-light-black;
-    margin-right:30px;
-    text-align:left;
-  }
-  .hour span {
-    padding:5px;
-    color:@extra-light-black;
-    border-radius: 5px;
-  }
-  .hour span:hover {
-    background: @extra-light-black;
-    color: @white;
-  } */
-  /*.calendar-transition {
-    transform-origin: center top;
-    transition: all .3s cubic-bezier(.23, 1, .32, 1);
-  }
-  .calendar-enter, .calendar-leave {
-    opacity: 0;
-    transform: scaleY(0);
-  }*/
   .calendar-panel {
     width: 340px;
     height: 310px;
@@ -894,10 +920,6 @@ export default {
       text-align: right;
     }
   }
-  /* .calendar-panel-header .btn {
-    color: #99A9BF;
-    font-size: 12px;
-  } */
   .calendar-panel-header span {
    cursor:pointer;
   }
@@ -935,26 +957,6 @@ export default {
     margin: 0 auto;
     padding: 0 15px;
   }
-  /*.calendar-panel-content table{
-    width: 100%;
-  }
-  .calendar-panel-content tr {
-    display: -webkit-flex;display: flex;
-    justify-content: space-between;-webkit-justify-content: space-between;
-  }
-  .calendar-panel-content th{
-    color: @light-silver;
-    text-align: center;
-    line-height: 36px;
-  }
-  .calendar-panel-content td{
-    margin: 2px 0;
-    color: @light-silver;
-    text-align: center;
-    line-height: 36px;
-    cursor: pointer;
-  }*/
-
   .calendar-header {
     display: -webkit-flex;display: flex;
     justify-content: space-between;-webkit-justify-content: space-between;
@@ -1132,24 +1134,6 @@ export default {
     margin: 0 3px;
     color: @drop-options-active-bg;
   }
-/*  .time-label,.time-up,.time-down {
-    display:inline-block;
-    width:80px;
-    padding:5px 5px;
-		text-align: center;
-		font-size: 14px;
-		margin:0 3px;
-		color:@silver;
-  }
-  .time-up,.time-down {
-    opacity:0.7;
-  }
-  .time-up:hover,.time-down:hover {
-    color:@drop-options-active-bg;
-    cursor:pointer;
-    opacity:1;
-  }*/
-
   /*input*/
   .flex-left {
     display: -webkit-inline-flex;
@@ -1330,12 +1314,6 @@ export default {
     color: @input-border-color;
     padding-right: 0;
   }
-  /*.querycondition .date-begin-end .date-line{
-    width: 16px;
-    display: inline-block;
-    text-align:center;
-    color: @extra-light-silver;
-  }*/
   .querycondition .flex-input-width{
     width: 270px;
   }

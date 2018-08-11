@@ -82,6 +82,7 @@ export default{
     },
     generateContent (item) {
       let box = this.$parent.$el.querySelector(item.selector).getBoundingClientRect()
+      
       this.guidePosition.width = box.width + 'px'
       this.guidePosition.height = box.height + 'px'
       this.guidePosition.left = box.left + document.body.scrollLeft + 'px'

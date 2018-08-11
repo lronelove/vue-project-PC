@@ -1,7 +1,12 @@
 <template>
   <div class="label-unit flex-left">
     <span  class="m-label" :style="{width: labelWidth}" v-if="label">{{label}}</span>
-    <span  class="m-text scrollbar" :class="{'limit-height': limitHeight}" :style="{width: inputWidth, overflow: overflow, maxHeight: (limitHeight ? inputHeight : '')}">{{value || '无'}}</span>
+    <span  
+      class="m-text scrollbar" 
+      :class="{'limit-height': limitHeight}" 
+      :style="{width: inputWidth, overflow: overflow, maxHeight: (limitHeight ? inputHeight : '')}">
+      {{value || '无'}}
+      </span>
   </div>
 </template>
 <script>
@@ -45,6 +50,7 @@ export default {
 </script>
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   .flex-left {
     display: -webkit-inline-flex;
     display: inline-flex;
