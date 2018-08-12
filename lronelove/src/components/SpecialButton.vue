@@ -21,11 +21,13 @@
 export default {
   name: 'sepcial-button',
   props: {
+
     /* 按键类型：‘back’返回按键 */
     type: {
       type: String,
       default: 'back'
     },
+
     /* 按键大小 */
     width: {
       type: String
@@ -43,6 +45,7 @@ export default {
 </script>
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   /*返回按键*/
   .back-svg-btn{
     width:59px;

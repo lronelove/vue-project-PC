@@ -137,6 +137,7 @@ export default {
 
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   /*loading动画1*/
   .loading {
     width:400px;

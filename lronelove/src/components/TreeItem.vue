@@ -4,15 +4,10 @@
     <div
       :class="{bold: isFolder}"
       style="height:28px;min-width:150px;">
-      <!--<span v-show="isFolder" v-bind:class="[folderClass, {open:open}]"></span>-->
       <span class="arrow" :style="{visibility: model.isFolder?'inherit':'hidden'}" :class="[folderClass,isClosed]" @click.stop.prevent="toggle"></span>
       <a :class="selectStatus(selected)">
         <span v-if="isMultiple" v-show="!model.disabled" class="checkbox" @click.stop.prevent="toggleItem()"></span>
         <span v-else v-show="!model.disabled" class="radio" @click.stop.prevent="toggleItem()"></span>
-        <!--<input type="checkbox" :value="model.id" v-model="checkedList" @change="toggleItem()"/>-->
-        <!--<span class="organicIcon glyphicon glyphicon-th" style="color:rgb(132, 146, 166);"></span>-->  <!--:class="isChecked?'glyphicon-check':'glyphicon-th'"-->
-        <!--@dblclick="changeType"-->
-        <!--[{{open ? '-' : '+'}}]-->
         <img v-if="model.organCode !== 'SERVICE-USER'" class="organicIcon" src="../assets/image/organization/company.png" width="18px" style="opacity:1"/>
         <span v-if="model.organCode === 'SERVICE-USER'" class="glyphicon glyphicon-user" style="color:#8492a6;margin-right:5px;"></span>
         <span v-bind:class="['name', model.focus? 'focus' : '']" >{{model.name}}</span>
@@ -38,13 +33,13 @@
 
 <script>
 import Vue from 'vue'
-// import * as types from '../store/types'
-// import _ from 'lodash'
+
 /**
  * 判断实例及其父节点对应的model.id是否存在于selected的数组中
  * @param vueObj vue component 实例
  * @param selected 选中项的id
  */
+
 const checkParent = function (vueObj, selected) {
   if (!vueObj.model) {
     return false
@@ -64,18 +59,23 @@ const checkParent = function (vueObj, selected) {
 const checkNodeState = function (model, selected) {
   let count = 0
   let selectedCount = 0
+
   const searchChildren = function (m) {
     count++
+
     if (selected.indexOf(m.id) > -1) {
       selectedCount++
     }
+
     for (let i = 0; i < m.children.length; i++) {
       searchChildren(m.children[i])
     }
   }
+
   for (let i = 0; i < model.children.length; i++) {
     searchChildren(model.children[i])
   }
+
   if (selectedCount === 0) {
     return -1
   } else if (count === selectedCount) {
@@ -123,46 +123,8 @@ export default {
       return this.model.isOpen ? 'minus' : 'plus'
     },
     isChecked: function () {
-//      return this.selected && checkParent(this, this.selected)
       return this.selected && (this.selected.indexOf(this.model.id) > -1)
     }
-//    selectStatus: function () {
-//      if (!this.isRelative) {
-//        return this.selected.indexOf(this.model.id) > -1 ? 'select' : null
-//      } else {
-//        let sonsCount = this.model.children.length
-//        if (sonsCount === 0) {
-//          return this.selected.indexOf(this.model.id) > -1 ? 'select' : null
-//        }
-//        let selectedCount = 0
-//        for (let i = 0; i < this.model.children.length; i++) {
-//          if (this.selected.indexOf(this.model.children[i].id) > -1) {
-//            selectedCount++
-//          }
-//        }
-//        if (selectedCount === 0) {
-//          let temp = this.selected.indexOf(this.model.id)
-//          if (temp > -1) {
-//            this.selected.splice(temp, 1)
-//          }
-//          return null
-//        } else if (selectedCount === sonsCount) {
-//          if (this.selected.indexOf(this.model.id) === -1) {
-//            this.selected.push(this.model.id)
-//          }
-//          return 'select'
-//        } else {
-//          let temp = this.selected.indexOf(this.model.id)
-//          console.log('Not all chirldren are selected within ' + this.model.id)
-//          console.debug(this.selected)
-//          if (temp > -1) {
-//            this.selected.splice(temp, 1)
-//            console.log(this.model.id + ' is selected')
-//          }
-//          return 'half'
-//        }
-//      }
-//    }
   },
   watch: {
   },
@@ -173,7 +135,6 @@ export default {
       } else {
         this.model.isOpen = !this.model.isOpen
         this.$emit('onchange', this.model.id, this.model)
-//        console.log(this.isFolder)
       }
     },
     changeType: function () {
@@ -189,16 +150,10 @@ export default {
       })
     },
     toggleItem: function () {
-//      console.debug('this:', this)
       if (this.model.disabled) {
         return
       }
       this.$emit('oncheck', this.model.id, this.model)
-//      if (!this.isChecked) {
-//        this.$store.dispatch(types.CHECK_TREE, this.model.id)
-//      } else {
-//        this.$store.dispatch(types.DELETE_TREE, this.model.id)
-//      }
     },
     onchange (id, model) {
       this.$emit('onchange', id, model)
@@ -215,73 +170,22 @@ export default {
           '1': 'select',
           '-1': null
         }
-//        console.debug(this.model.id, 'loaded')
+
         /* 如果没有儿子节点，那直接根据自身节点判断 */
         let sonsCount = this.model.children.length
+
         if (sonsCount === 0) {
           return selected.indexOf(this.model.id) > -1 ? 'select' : null
         }
         let temp = selected.indexOf(this.model.id)
         let flag = checkNodeState(this.model, selected)
-        /* 如果儿子节点没有一个被选中，那么把自身也从选中数组中去除，并且返回'null' */
-//        if (flag === -1) {
-//          if (temp > -1) {
-//            selected.splice(temp, 1)
-//          }
-//          return null
-//        } else if (flag === 1) { /* 如果儿子节点全被选中，那么把自身也增加到选中数组中，并且返回'select' */
-//          temp === -1 && selected.push(this.model.id)
-//          return 'select'
-//        } else {
-//          if (temp > -1) {
-//            selected.splice(temp, 1)
-//            console.log(this.model.id + ' is selected')
-//          }
-//          return 'half'
-//        }
+
         if (flag !== 1 && temp > -1) {
           selected.splice(temp, 1)
-//          console.log(this.model.id + ' is selected')
         } else if (flag === 1 && temp === -1) {
           selected.push(this.model.id)
         }
         return map[flag]
-
-//        /* 如果没有儿子节点，那直接根据自身节点判断 */
-//        let sonsCount = this.model.children.length
-//        if (sonsCount === 0) {
-//          return selected.indexOf(this.model.id) > -1 ? 'select' : null
-//        }
-//        /* 计算儿子节点有多少选中 */
-//        let selectedCount = 0
-//        for (let i = 0; i < this.model.children.length; i++) {
-//          if (selected.indexOf(this.model.children[i].id) > -1) {
-//            selectedCount++
-//          }
-//        }
-//        /* 如果儿子节点没有一个被选中，那么把自身也从选中数组中去除，并且返回'null' */
-//        if (selectedCount === 0) {
-//          let temp = selected.indexOf(this.model.id)
-//          if (temp > -1) {
-//            selected.splice(temp, 1)
-//          }
-//          return null
-//        } else if (selectedCount === sonsCount) { /* 如果儿子节点全被选中，那么把自身也增加到选中数组中，并且返回'select' */
-//          if (selected.indexOf(this.model.id) === -1) {
-//            selected.push(this.model.id)
-//          }
-//          return 'select'
-//        } else {
-//          /* 否则就是有部分儿子被选中，那么看看自身是否在选中数组中，如果是，从中移除，并且返回'half' */
-//          let temp = selected.indexOf(this.model.id)
-//          console.log('Not all chirldren are selected within ' + this.model.id)
-//          console.debug(selected)
-//          if (temp > -1) {
-//            selected.splice(temp, 1)
-//            console.log(this.model.id + ' is selected')
-//          }
-//          return 'half'
-//        }
       }
     }
   }
@@ -289,12 +193,8 @@ export default {
 </script>
 
 <style scoped lang="less">
-/*a.select{*/
-  /*color: #fff;*/
-  /*background: #337ab7;*/
-  /*border-radius:3px;*/
-/*}*/
 @import '../assets/less/variables.less';
+
 li.select {
   background: #ddd;
   padding-left: 10px;
@@ -355,23 +255,9 @@ a > * {
   line-height:21px;
   font-size:14px;
 }
+
 /* checkbox style begin */
 a.select .checkbox:before{
-  /*content: '\2714';
-  color:#13CE66;
-  font-weight:600;*/
-  /*box-sizing: content-box;
-  border: 2px solid #13CE66;
-  border-left: 0;
-  border-top: 0;
-  height: 9px;
-  left: 6px;
-  top: 1px;
-  position:absolute;
-  transform: rotate(35deg) scaleY(1);
-  -webkit-transform: rotate(35deg) scaleY(1);
-  -moz-transform: rotate(35deg) scaleY(1);
-  width: 3px;*/
   box-sizing: content-box;
   border: 2px solid #fff;
   border-left: 0;
@@ -386,9 +272,6 @@ a.select .checkbox:before{
   -moz-transform: rotate(45deg) scaleY(1); /*改*/
 }
 a.half .checkbox:after{
-  /* content: '\2212';
-  color:#13CE66;
-  font-weight:600; */
   position:absolute;
   display:block;
   content: "";

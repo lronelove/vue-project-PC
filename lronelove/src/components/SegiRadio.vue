@@ -41,7 +41,7 @@
   import _ from 'lodash'
   import FormLabel from './Label.vue'
   import tabArr from '../utils/tabArr'
-  
+
   export default {
     components: {FormLabel},
     props: {
@@ -77,6 +77,7 @@
       inputWidth: {
         type: String
       },
+
       /* disabled两种样式：label、common, 分别是文本、正常灰色背景 */
       disabledStyle: {
         type: String,
@@ -109,11 +110,14 @@
       options (val, oldVal) {
         var self = this
         self.selected = self.value
+
         if (_.isEqual(val, oldVal)) {
           return false
         }
+
         if (val.length > 0) {
           let res
+
           val.forEach((item) => {
             if (item.value === self.value) {
               res = item.value
@@ -128,6 +132,7 @@
         let self = this
         self.selected = self.value
         let flag = this.options.some((item) => { return item.value === self.value })
+
         if (!flag) {
           console.warn('error, the value is beyond the options!')
         }
@@ -138,6 +143,7 @@
 
 <style scoped lang="less">
   @import '../assets/less/variables.less';
+  
   label {
     font-weight: normal;
     text-align:left;

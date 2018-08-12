@@ -18,6 +18,7 @@
 -->
 <template>
   <div class="select2 clearfix" :class="{noMaxHeight: isPopover}" v-clickoutside="hide" style="position:relative" :style="{height:(isPopover) ? 'auto' : inputHeight}" ref="select2">
+    
     <!--外嵌格式-->
     <div v-if="outside">
       <div v-if="!disabled || disabledStyle !== 'label'" class="hit clearfix" :class="{error: errorTip.length>0}" style="position: relative">
@@ -26,6 +27,7 @@
         <div class="hit-right" :class="{numberClass: optionsType === 'number', popoverSelect: isPopover}">
           <input @click="toggle" :disabled="disabled" @keyup.esc.prevent="hide"  :class="{popoverSelect: isPopover}" type="text" class="form-control flex-input-width" v-model.trim="convertInputOptions" :placeholder="getholder()" :name="inputName" ref="inputRef" :style="{borderRadius: radius, width: inputWidth, height: (isPopover) ? 0 : inputHeight, opacity: (isPopover) ? 0 : 1}" readonly>
           <span v-if="!disabled" v-show="!isPopover" class="caret input-icon" @click="toggle"></span>
+    
           <!--下拉菜单-->
           <!--前端数据--> <!--, marginLeft: getMargin()-->
           <div class="drop flex-input-width" v-if="client" v-show="show || isPopover" style="transform-origin: top center" :style="{width: dropWidth || inputWidth, top: top, transform: rotate}" :class="{popoverSelect: isPopover,clearfix: isPopover, dropUp: dropUp}">
@@ -35,14 +37,21 @@
             </div>
             <ul class="dropdown-menu scrollbar" style="width:100%;" :style="{borderRadius: radius, transform: rotate}" :class="{multiple: isMultiple, inline: inlineClass, popoverSelect: isPopover, colorClass: optionsType === 'color'}">
               <li v-if="filterData.length===0"><a>没有数据</a></li>
+    
               <!-- 增加d.disabled,选项不可选时，chooseValue直接返回 -->
-              <li v-else @click="chooseValue(d.value, d.disabled)"v-for="d in filterData" :class="{ active: checkSelected(d.value), disabled: d.disabled }">
+              <li 
+                v-else 
+                @click="chooseValue(d.value, d.disabled)"
+                v-for="(d, index) in filterData" 
+                :key="index" 
+                :class="{ active: checkSelected(d.value), disabled: d.disabled }">
                 <span></span>
                 <i class="color-icon"  v-if="optionsType === 'color'" :style="{background: d.value}"></i>
                 <a class="notSelect">{{ d.name }}</a>
               </li>
             </ul>
           </div>
+    
           <!--后端数据-->
           <div class="drop flex-input-width" v-else v-show="show" style="transform-origin: top center" :style="{width: dropWidth || inputWidth, top: top, transform: rotate}">
             <div class="drop-top" :style="{transform: rotate}">
@@ -50,7 +59,11 @@
               <span :style="{borderRadius: radius, height: searchHeight, lineHeight: searchHeight}" class="input-icon glyphicon glyphicon-search"></span>
             </div>
             <ul :class="searchData.length ? 'dropdown-menu' : ''" :style="{borderRadius: radius,width: inputWidth, transform: rotate}" class="scrollbar">
-              <li @click="chooseValue(d.value)"v-for="d in searchData" :class="{ active: checkSelected(d.value) }">
+              <li 
+                @click="chooseValue(d.value)" 
+                v-for="(d, index) in searchData" 
+                :key="index" 
+                :class="{ active: checkSelected(d.value) }">
                 <span></span>
                 <i class="color-icon"  v-if="optionsType === 'color'" :style="{background: d.value}"></i>
                 <a class="notSelect">{{ d.name }}</a>
@@ -61,16 +74,32 @@
       </div>
       <form-label v-else :label="label" :value="convertInputOptions" :labelWidth="labelWidth" :inputWidth="inputWidth"/>
     </div>
+    
     <!--内嵌格式-->
     <div v-else class="clearfix">
       <label class="input segi_formInput" :style="{height:inputHeight}">
-        <input @click="toggle" :disabled="disabled" @keyup.esc.prevent="hide" type="text" class="form-control" v-model.trim="convertInputOptions" :placeholder="getholder()" :name="inputName" ref="inputRef" :style="{width: inputWidth, height: inputHeight, borderRadius: radius, paddingLeft: labelWidth}" readonly>
+        <input 
+          @click="toggle" 
+          :disabled="disabled" 
+          @keyup.esc.prevent="hide" 
+          type="text" 
+          class="form-control" 
+          v-model.trim="convertInputOptions" 
+          :placeholder="getholder()" 
+          :name="inputName" 
+          ref="inputRef" 
+          :style="{width: inputWidth, height: inputHeight, borderRadius: radius, paddingLeft: labelWidth}" 
+          readonly>
         <span class="labelBox" :style="{height: inputHeight, lineHeight: inputHeight, width: labelWidth}">
           <span class="labelText"><i :class="labelIcon"></i>{{label}}<span v-show="required" style="color:@primary-red">*</span></span>
         </span>
-        <button type="button"class="btn btn-default dropdown-toggle" :style="{borderRadius: radius, height: inputHeight, width: buttonWidth, marginLeft: buttonLeft}">
+        <button 
+          type="button" 
+          class="btn btn-default dropdown-toggle" 
+          :style="{borderRadius: radius, height: inputHeight, width: buttonWidth, marginLeft: buttonLeft}">
           <span :class="caret"></span>
         </button>
+    
         <!-- 删除的功能 -->
         <!--<button  v-else type="button" @click.stop="clearValue" class="btn btn-default dropdown-toggle" :style="{borderRadius: radius, height: inputHeight, width: buttonWidth, marginLeft: -buttonWidth}">-->
         <!--<span class="glyphicon glyphicon-trash"></span>-->
@@ -83,11 +112,24 @@
             <input type="text" class="form-control" v-model.trim="search" :placeholder="getSearchHolder()" :style="{height: searchHeight}">
             <span :style="{borderRadius: radius, height: searchHeight, lineHeight: searchHeight}" class="input-icon glyphicon glyphicon-search"></span>
           </div>
-          <ul class="dropdown-menu scrollbar" style="width:100%;" :style="{borderRadius: radius}" :class="{multiple: isMultiple, inline: inlineClass, popoverSelect: isPopover, colorClass: optionsType === 'color'}">
+          <ul 
+            class="dropdown-menu scrollbar" 
+            style="width:100%;" 
+            :style="{borderRadius: radius}" 
+            :class="{multiple: isMultiple, inline: inlineClass, popoverSelect: isPopover, colorClass: optionsType === 'color'}">
             <li v-if="filterData.length===0"><a>没有数据</a></li>
-            <li v-else @click="chooseValue(d.value)" v-for="d in filterData" :class="{ active: checkSelected(d.value) }"><span></span><a class="notSelect">{{ d.name }}</a></li>
+            <li 
+              v-else 
+              @click="chooseValue(d.value)" 
+              v-for="(d, index) in filterData"
+              :key="index" 
+              :class="{ active: checkSelected(d.value) }">
+              <span></span>
+              <a class="notSelect">{{ d.name }}</a>
+            </li>
           </ul>
         </div>
+
         <!--后端数据-->
         <div class="drop" v-else v-show="show" :style="{width: inputWidth}">
           <div class="drop-top">
@@ -95,7 +137,14 @@
             <span :style="{borderRadius: radius, height: searchHeight, lineHeight: searchHeight}" class="input-icon glyphicon glyphicon-search"></span>
           </div>
           <ul :class="searchData.length ? 'dropdown-menu' : ''" :style="{borderRadius: radius,width: inputWidth}" class="scrollbar">
-            <li @click="chooseValue(d.value)" v-for="d in searchData" :class="{ active: checkSelected(d.value) }"><span></span><a class="notSelect">{{ d.name }}</a></li>
+            <li 
+              @click="chooseValue(d.value)" 
+              v-for="(d, index) in searchData"
+              :key="index" 
+              :class="{ active: checkSelected(d.value) }">
+              <span></span>
+              <a class="notSelect">{{ d.name }}</a>
+            </li>
           </ul>
         </div>
       </label>
@@ -108,18 +157,20 @@ import clickoutside from '../utils/directive/clickoutside'
 import _ from 'lodash'
 import { SHOW_TOAST } from '../store/types'
 import FormLabel from './Label.vue'
-// import tabArr from '../utils/tabArr'
+
 export default {
   directives: {
     clickoutside
   },
   components: {FormLabel},
   props: {
+
    // 前端/后端数据，默认为前端数据
     client: {
       type: Boolean,
       default: true
     },
+
     // 后端数据的api
     url: {
       type: String,
@@ -158,16 +209,19 @@ export default {
       type: String,
       default: 'id'
     },
+
     /* 各部分的圆角 */
     radius: {
       type: String,
       default: '4px'
     },
+
     /* label宽度 和 输入框的margin-left，不能为auto */
     labelWidth: {
       type: String,
       default: '90px' // 10rem
     },
+
     /* 输入框宽度:50px-xx，注意：min-width:50px */
     inputWidth: {
       type: String,
@@ -176,31 +230,37 @@ export default {
     dropWidth: {
       type: String
     },
+
     /* 输入框高度:30px-50px，注意：对于整个select2，max-height:50px */
     inputHeight: {
       type: String,
       default: '40px' // 4rem
     },
+
     /* 搜索框高度 */
     searchHeight: {
       type: String,
       default: '35px' // 3.5rem
     },
+
     /* 按键宽度 */
     buttonWidth: {
       type: String,
       default: '40px' // 4rem
     },
+
     /* 下拉按键的图标，可以是其他图标 */
     caret: {
       type: String,
       default: 'caret'
     },
+
     /* 内嵌格式的icon */
     labelIcon: {
       type: String,
       default: 'glyphicon glyphicon-th-list'
     },
+
     /* 设置可写 */
     disabled: {
       type: Boolean,
@@ -210,6 +270,7 @@ export default {
       type: Boolean,
       default: false
     },
+
     // 下拉列表，是否一行显示多个的样式
     inlineClass: {
       type: Boolean,
@@ -219,6 +280,7 @@ export default {
       type: Boolean,
       default: false
     },
+
     /* 是否警示输入不正确（边框变红） */
     isError: {
       type: Boolean,
@@ -228,11 +290,13 @@ export default {
       type: Boolean,
       default: true
     },
+
     /* 类型：普通‘text’，颜色‘color’,数字‘number’数字用于table组件的select */
     optionsType: {
       type: String,
       default: 'text'
     },
+
     /* disabled两种样式：label、common, 分别是文本、正常灰色背景 */
     disabledStyle: {
       type: String,
@@ -250,9 +314,10 @@ export default {
   watch: {
     value () {
       let self = this
-//      setTimeout(function () {
+
       if (!self.isMultiple) {
         let flag = self.options.some((item) => { return item.value === self.value })
+
         if (flag) {
           self.options.forEach(function (item) {
             if (item.value === self.value) self.inputOption = _.cloneDeep(item)
@@ -262,13 +327,16 @@ export default {
         }
       } else {
         let flag = self.options.some((item) => {
+
           return self.value.some((item2) => {
             return item.value === item2
           })
         })
+
         if (flag) {
           self.inputOption = self.isMultiple ? [] : {}
           self.inputOption.splice(0, self.inputOption.length)
+
           self.options.forEach(function (item) {
             // 如果传进来的是数组而且当前的项的值也在这个数组内, 就把对应的项设置为被选中的
             if (self.value instanceof Array && self.value.indexOf(item.value) > -1) {
@@ -285,8 +353,10 @@ export default {
   mounted () {
     console.log(this.value)
     let self = this
+
     if (!self.isMultiple) {
       let flag = this.options.some((item) => { return item.value === self.value })
+
       if (flag) {
         this.options.forEach(function (item) {
           if (item.value === self.value) self.inputOption = _.cloneDeep(item)
@@ -295,22 +365,16 @@ export default {
         self.inputOption = {}
       }
     } else {
-      /* let flag = this.options.some((item) => { return tabArr.indexOfTab(self.value, item.value) !== -1 })
-      console.log(flag)
-      if (flag) {
-        this.options.forEach(function (item) {
-          if (tabArr.indexOfTab(self.value, item.value) !== -1) self.inputOption.push(_.cloneDeep(item))
-        })
-      } else {
-        self.inputOption = []
-      } */
+ 
       let flag = this.options.some((item) => {
         return self.value.some((item2) => {
           return item.value === item2
         })
       })
+
       if (flag) {
         self.inputOption.splice(0, self.inputOption.length)
+
         this.options.forEach(function (item) {
           // 如果传进来的是数组而且当前的项的值也在这个数组内, 就把对应的项设置为被选中的
           if (self.value instanceof Array && self.value.indexOf(item.value) > -1) {
@@ -337,10 +401,12 @@ export default {
   computed: {
     convertInputOptions () {
       var self = this
+
       if (!this.isMultiple) {
         return self.inputOption.name
       } else {
         let temp = ''
+
         for (var i = 0; i < self.inputOption.length; i++) {
           if (i !== self.inputOption.length - 1) {
             temp += self.inputOption[i].name + ','
@@ -362,16 +428,12 @@ export default {
     }
   },
   methods: {
-//    /* 清空值的功能 */
-//    clearValue () {
-//      this.inputOption.name = ''
-//      this.inputOption.value = null
-//      this.$emit('input', this.inputOption.value)
-//    },
     getInputOption () {
       let self = this
+
       if (!self.isMultiple) {
         let flag = this.options.some((item) => { return item.value === self.value })
+
         if (flag) {
           this.options.forEach(function (item) {
             if (item.value === self.value) self.inputOption = _.cloneDeep(item)
@@ -387,6 +449,7 @@ export default {
         })
         if (flag) {
           self.inputOption.splice(0, self.inputOption.length)
+
           this.options.forEach(function (item) {
             // 如果传进来的是数组而且当前的项的值也在这个数组内, 就把对应的项设置为被选中的
             if (self.value instanceof Array && self.value.indexOf(item.value) > -1) {
@@ -403,6 +466,7 @@ export default {
         return
       }
       this.errorTip = ''
+
       if (this.required && this.value.length === 0) {
         this.errorTip = this.useHolderTip ? this.holder1 : (this.label ? '请选择' + this.label : this.holder1)
         return true
@@ -434,11 +498,11 @@ export default {
     },
     /* 点击下落，再点击回退 */
     toggle () {
-//      var self = this
       if (this.disabled) {
         return
       }
       this.show = !this.show
+
       if (!this.show) {
         this.search = ''
         this.rotate = null
@@ -446,6 +510,7 @@ export default {
       } else {
         let hit = this.$refs.inputRef
         let box = hit.getBoundingClientRect()
+
         if (this.directionOverRide === '' && box.bottom > (window.innerHeight / 2) && this.$refs.select2.offsetTop > 280) {
           this.top = '-10px'
           this.rotate = `rotate(180deg)`
@@ -453,19 +518,9 @@ export default {
           this.top = '-10px'
           this.rotate = `rotate(180deg)`
         }
-//        let element = this.$el
-//        let bottomDiff = document.getElementsByTagName('body')[0].getBoundingClientRect().bottom -
-//          element.getElementsByClassName('hit')[0].getBoundingClientRect().bottom
-//        console.log(bottomDiff)
-//        setTimeout(function () {
-//          if (bottomDiff < element.getElementsByTagName('ul')[0].offsetHeight) {
-//            self.dropUp = true
-//          } else {
-//            self.dropUp = false
-//          }
-//        }, 0)
       }
     },
+
     /* 隐藏选项栏 */
     hide () {
       if (this.canClickOutside) {
@@ -473,19 +528,23 @@ export default {
         this.search = ''
       }
     },
+
     /* 选择一个或多个值 */
     chooseValue (value, disabled) {
       if (disabled) return
       const self = this
+
       if (!this.isMultiple) {
         if (this.client) {
           self.options.forEach(function (item) {
+
             if (item.value === value) {
               self.inputOption = _.cloneDeep(item)
             }
           })
         } else {
           self.searchData.forEach(function (item) {
+
             if (item.value === value) {
               self.inputOption = _.cloneDeep(item)
             }
@@ -504,6 +563,7 @@ export default {
             index: 0,
             item: null
           }
+
           // 遍历选中项数组,判断该项是否已被选中
           self.inputOption.forEach(function (item, index) {
             if (item.value === value) {
@@ -511,6 +571,7 @@ export default {
               flag.index = index
             }
           })
+
           // 如果该项在选中项数组中,把其剔除
           if (flag.isSelected) {
             self.inputOption.splice(flag.index, 1)
@@ -529,6 +590,7 @@ export default {
               index: 0,
               item: null
             }
+
             self.inputOption.forEach(function (item, index) {
               if (item.value === value) {
                 flag.isSelected = true
@@ -563,9 +625,11 @@ export default {
     /* 从后端获取数据 */
     updateOptions: _.debounce(function () {
       let url = this.url + '?name=' + this.search
+
       if (this.search) {
         this.$http.get(url, {search: this.search}, {emulateJSON: true}).then((res) => {
           this.searchData = res.data ? res.data : []
+
           if (this.searchData.length === 0) {
             this.$store.dispatch(SHOW_TOAST, '查不到相关数据')
           }
@@ -576,6 +640,7 @@ export default {
         this.searchData = []
       }
     }, 1200),
+
     /* 判断输入参数对应的item 是否存在于self.inputOption中 */
     checkSelected (value) {
       if (!this.isMultiple) {
@@ -591,6 +656,7 @@ export default {
 </script>
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   .drop.dropUp {
     top: auto;
     bottom: 100%;

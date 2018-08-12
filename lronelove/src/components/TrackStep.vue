@@ -1,6 +1,7 @@
 <!--TrackStep组件:用于工单查询的‘详情’模态框中，工单追踪步骤-->
 <template>
   <div class="track-step flex-start-top"> <!--:style="isLast ? activeStep : ''"-->
+    
     <!--左边-->
     <slot name="left">
       <div class="step-left">
@@ -10,6 +11,7 @@
         </template>
       </div>
     </slot>
+    
     <!--右边-->
     <div class="step-right flex-1">
       <div class="step-content">
@@ -25,13 +27,13 @@
           <div class="step-remarks">{{remarks}}</div>
         </slot>
       </div>
-      <!--<hr v-if="!isFirst" />-->
     </div>
   </div>
 </template>
 
 <script>
 import ct from '../utils/convertTime'
+
 export default {
   props: {
     title: {
@@ -46,21 +48,25 @@ export default {
       type: String,
       default: ''
     },
+
     // 备注信息
     remarks: {
       type: String,
       default: ''
     },
+
     // 是否最下面一行,没有下划线
     isFirst: {
       type: Boolean,
       default: false
     },
+
     // 是否最后一步
     isLast: {
       type: Boolean,
       default: false
     },
+
     // 最后一步的文字样式
     activeStep: {
       type: Object,
@@ -70,6 +76,7 @@ export default {
         }
       }
     },
+
     // 最后一步的圆圈样式
     activeIcon: {
       type: Object,
@@ -83,11 +90,13 @@ export default {
         }
       }
     },
+
     // iconType:normal普通环节，cust自定义环节
     iconType: {
       type: String,
       default: 'normal'
     },
+
     // disabled:自定义环节，如果为true，置灰
     disabled: {
       type: Boolean,
@@ -114,6 +123,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/less/variables.less';
+
 p{
   margin: 0;
   padding:0;

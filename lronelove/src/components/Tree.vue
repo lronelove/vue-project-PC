@@ -32,10 +32,8 @@ event:
 -->
 <template>
   <div style="height: 100%;">
-    <!--<input v-model="keyword" class="form-control" placeholder="快速查找">-->
     <div v-if="searchShow" class="search-container">
       <input type="text" class="form-control search-input" v-model.trim="keyword" placeholder="快速查找" @keyup.enter="searchTree()">
-      <!-- <button style="position:absolute;top: 10px;right: 20px;" class="btn btn-primary" type="button" @click="searchTree()">搜索</button> -->
       <span class="glyphicon glyphicon-search search-btn" @click="searchTree()"></span>
     </div>
     <div style="margin-left:5px;" class="tree-container scrollbar" :class="{noSearch: !searchShow}">
@@ -54,13 +52,13 @@ event:
         </item>
       </ul>
     </div>
-    <!--<button @click="change"/>-->
   </div>
 </template>
 
 <script>
 import item from './TreeItem'
 import _ from 'lodash'
+
 /**
  * 把传进来的数据结构每个节点都加上加上hide, isFolder属性
  * @param vm vue component上下文
@@ -70,22 +68,28 @@ const formatData = function (vm, obj, parent) {
   if (!obj.hasOwnProperty('hide')) {
     vm.$set(obj, 'hide', false)
   }
+
   if (!obj.hasOwnProperty('isFolder')) {
     vm.$set(obj, 'isFolder', true)
   }
+
   if (!obj.hasOwnProperty('isOpen')) {
     vm.$set(obj, 'isOpen', false)
   }
+
   if (!obj.hasOwnProperty('disabled')) {
     vm.$set(obj, 'disabled', false)
   }
+
   if (!obj.hasOwnProperty('focus')) {
     vm.$set(obj, 'focus', false)
   }
   obj.parent = parent
+  
   if (!obj.children || obj.children.length === 0) {
     return false
   }
+  
   for (let i = 0; i < obj.children.length; i++) {
     formatData(vm, obj.children[i], obj)
   }
@@ -96,44 +100,53 @@ const formatData = function (vm, obj, parent) {
  * @param selected 选中项的id
  * @param isAdd true为push, false为除去
  */
+
 const setChildren = function (model, selected, isAdd) {
   let index = selected.indexOf(model.id)
-//  relaties.push(model.id)
+
   if (index > -1 && !isAdd) {
     selected.splice(index, 1)
   } else if (index === -1 && isAdd) {
     selected.push(model.id)
   }
+  
   if (!model.children || model.children.length === 0) {
     return false
   }
+  
   for (let i = 0; i < model.children.length; i++) {
     setChildren(model.children[i], selected, isAdd)
   }
 }
 function filter (node, keyword, deep) {
   console.log(keyword.length)
+  
   const setAllNode = function (node, value) {
     node.hide = value
     node.focus = false
+   
     if (!node.children) return
+    
     for (var i = 0; i < node.children.length; i++) {
       setAllNode(node.children[i], value)
     }
   }
+  
   if (keyword.length < 1) {
     setAllNode(node, false)
-//    console.log(JSON.stringify(node))
     return
   }
 
   const deepSearch = function (node, keyword, isDeep) {
     var flag = true
+    
     if (node.name.indexOf(keyword) > -1) {
       node.hide = false
       node.focus = true // 设置为高亮
       console.log(node.name + '有' + ', 但是继续筛选子孙节点进行染色（标记匹配关键字）')
+      
       if (deep && node.children && node.children.length > 0) {
+        
         for (var j = 0; j < node.children.length; j++) {
           console.log('for!!!!')
           deepSearch(node.children[j], keyword, isDeep)
@@ -147,12 +160,14 @@ function filter (node, keyword, deep) {
       return false
     } else {
       console.log(node.name + '自己没有,查找它儿子')
+      
       for (var i = 0; i < node.children.length; i++) {
         if (deepSearch(node.children[i], keyword)) {
           flag = false
           console.log(node.name + '的第' + (i + 1) + '个儿子有')
         }
       }
+      
       if (flag) {
         console.log(node.name + '它儿子也没有')
       } else {

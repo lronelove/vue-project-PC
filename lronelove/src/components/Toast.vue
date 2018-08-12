@@ -41,11 +41,4 @@
   -webkit-animation: fadeinToast 0.5s, fadeoutToast 0.5s 2.5s;
   animation: fadeinToast 0.5s, fadeoutToast 0.5s 2.5s;
 }
-
-/*.fade-enter-active, .fade-leave-active {*/
-  /*transition: all .8s*/
-/*}*/
-/*.fade-enter, .fade-leave-active {*/
-  /*bottom: 0*/
-/*}*/
 </style>

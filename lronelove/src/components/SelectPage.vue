@@ -16,7 +16,13 @@ slot说明
       <div class="input-group">
         <input type="text" class="form-control" :placeHolder="holder" disabled>
         <span class="input-group-btn">
-        <button class="btn btn-default form-control" style="border-top-right-radius: 5px;border-bottom-right-radius: 5px" type="button" @click="showModal" >请选择</button>
+        <button 
+          class="btn btn-default form-control" 
+          style="border-top-right-radius: 5px;border-bottom-right-radius: 5px" 
+          type="button" 
+          @click="showModal" 
+          >请选择
+        </button>
         </span>
       </div>
     <modal :title="title" :show="modal.show" okText="确定" ifCancel="false" @closeModalWin="closeModalWin" @save="save">
@@ -27,6 +33,7 @@ slot说明
 
 <script>
 import Modal from './CommonCompoent/modal.vue'
+
 export default {
   props: {
     required: {
@@ -56,14 +63,17 @@ export default {
     Modal
   },
   methods: {
+
     /* 打开modal */
     showModal () {
       this.modal.show = true
     },
+
     /* 关闭modal */
     closeModalWin () {
       this.modal.show = false
     },
+    
     /* 保存事件 */
     save () {
       this.$emit('save')

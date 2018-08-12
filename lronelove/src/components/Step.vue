@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="step">
-    <div class="section" v-for="(item, index) in arr" :style="sectionStyle">
+    <div class="section" v-for="(item, index) in arr" :key="index" :style="sectionStyle">
       <span class="left" v-if="index!=0"></span>
       <div class="circle" @click="changeColor" :style="{background: item.style.color}">
         <span>{{ index+1 }}</span>
@@ -31,6 +31,7 @@
       }
     },
     methods: {
+      
       // 点击圆点，切换颜色和对应的表单（父组件中，表单v-if绑定到item.style.color上,所以颜色切换时表单也切换）
       changeColor (obj) {
         this.$emit('changeColor', obj.target.innerText)

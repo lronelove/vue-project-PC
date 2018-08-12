@@ -23,7 +23,7 @@
           </button>
           <div class="Segi_Select" style="float:left;" v-show="availableSeatArr.length>0">
             <select id="Segi_Widget_Seat" style="float: left;margin: 5px;" v-model="selectedAvailableSeat">
-              <option v-for="seat in availableSeatArr" v-bind:value="seat.StaffId">
+              <option v-for="(seat, index) in availableSeatArr" :key="index" v-bind:value="seat.StaffId">
                 {{ seat.TerminalId }}
               </option>
             </select>
@@ -53,6 +53,7 @@
 </template>
 <script>
   import Notify from 'title-notify'
+
   const Event = {
     login: 'LOGIN',
     logout: 'LOGOUT',
@@ -70,6 +71,7 @@
     start: 0,
     end: 0
   }
+
   export default{
     props: {
       host: {
@@ -186,6 +188,7 @@
             is_extern: _this.isExtern,
             status: _this.status
           }
+
           // 关闭Socket....
           // socket.close()
           if (_this.isConnected) {
@@ -208,6 +211,7 @@
           console.log('message comming!' + event.data)
           window.focus()
           var temp = JSON.parse(event.data)
+
           switch (temp.Event) {
             case Event.onCallIn: _this.onCallIn(temp); break// 被动
             case Event.onCallOut: _this.onCallOut(temp); break// 被动
@@ -225,6 +229,7 @@
         // 监听Socket的关闭
         this.socket.onclose = function (event) {
           _this.isConnected = false
+
           if (_this.isError) {
             return
           }
@@ -289,11 +294,7 @@
           this.availableSeatArr = sParam.data.filter(function (v) {
             return v.status === '0' && v.dnd === '0' && (v.TerminalId !== _this.terminalId)
           })
-          // _this.availableSeatArr = sParam.data
-          // var html = '<select id="Segi_Widget_Seat" style="    float: left;margin: 5px;">'
-          // availableArr.forEach(function (item) {
-          //   html += '<option value="' + item.StaffId + '">' + item.TerminalId + '</option>'
-          // })
+        
           if (this.availableSeatArr.length < 1) {
             window.alert('当前没有空闲分机')
             return
@@ -312,6 +313,7 @@
       onCallIn: function (sParam) {
         this.number = sParam.CallId
         window.focus()
+
         this.iN.notify({
           title: '新通知',
           body: sParam.CallId + '来电了'
@@ -323,6 +325,7 @@
       onCallOut: function (sParam) {
         this.number = sParam.CallId
         window.focus()
+
         // 主动呼出事件调用跟呼入事件同样的处理逻辑
         this.callOutCb && this.callOutCb(sParam)
       },
@@ -343,6 +346,7 @@
       },
       dialone: function (event) {
         console.log(event.target.value)
+
         if (!this.isConnected) {
           window.alert('请保证盒子服务连接正常')
         }
@@ -404,6 +408,7 @@
       },
       reconnectJob () {
         var a = window.confirm('与盒子服务连接断开,重新连接？')
+        
         if (a === true) {
           this.init()
         }

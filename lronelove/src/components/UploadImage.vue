@@ -27,12 +27,10 @@ props解释
       <label :for="name" v-if="!value && !disabled">
         <input v-if="multiple" type="file" accept="image/png, image/jpg, image/jpeg, image/bmp, image/gif" :name="name"  :id="name"   @change="previewMultipleImg($event, $event.target.files)" multiple="multiple">
         <input v-else type="file" accept="image/png, image/jpg, image/jpeg, image/bmp, image/gif" :name="name"  :id="name"   @change="previewImg($event, $event.target.files[0])">
-        <!--<input type="file" accept="">-->
         <div :style="{height: addHeight}" class="right border-color"></div>
         <div :style="{width: addWidth}" class="bottom border-color"></div>
       </label>
       <img v-if="value" :src="imgPath()" @click="showBigPhoto" @error="setValid(false)" @load="setValid(true)">
-      <!-- <span v-if="value && !disabled" class="glyphicon glyphicon-remove" style="color: rgb(197, 27, 27) ; position: absolute ; top:0 ; right: 0" @click.stop="delImg"></span> -->
       <div v-if="value && !disabled" class="update" @click.stop="delImg">
         <img src="../assets/image/trash.png" alt="" >
       </div>
@@ -53,6 +51,7 @@ props解释
 <script>
   import * as Types from '../../src/store/types'
   import RemoveIcon from 'components/RemoveIcon'
+
   export default {
     components: {
       RemoveIcon
@@ -95,11 +94,13 @@ props解释
         type: Boolean,
         default: false
       },
+
       /* 图片的默认前缀 */
       imgPrefix: {
         type: String,
         default: ''
       },
+
       /* 在读取图片成功时是否会把值传出来的参数 */
       deliverFlag: {
         type: Boolean,
@@ -147,10 +148,12 @@ props解释
         }
         return false
       },
+
       /* 图片路径 */
       imgPath () {
         return this.imgPrefix + this.value
       },
+
       /* 预览图片 */
       previewMultipleImg (event, files) {
         const self = this
@@ -175,21 +178,25 @@ props解释
             self.$store.dispatch(Types.SHOW_TOAST, '图片体积过大，最大上传限制为' + self.maxImgSize + 'MB')
           } else {
             self.$emit('file', file)
+
             if (self.deliverFlag) {
               self.$emit('input', reader.result)
             }
           }
         }
       },
+
       /* 设置图片是否有效 */
       setValid (isValid) {
         this.isValid = isValid
       },
+
       /* 删除图片 */
       delImg () {
         this.$emit('input', '')
         this.$emit('delete')
       },
+
       /* 展示大图 */
       showBigPhoto () {
         if (!this.isValid) {
@@ -197,6 +204,7 @@ props解释
         }
         this.showBigImage && (this.photoFlag = true)
       },
+
       /* 隐藏大图 */
       hidePhoto () {
         this.photoFlag = false
@@ -207,6 +215,7 @@ props解释
 
 <style scoped lang="less">
   @import '../assets/less/variables.less';
+  
   .error-tip {
     position: absolute;
     top: 100%;

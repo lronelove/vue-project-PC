@@ -29,14 +29,14 @@
               </div>
               <!--日期-->
               <div v-show="stage === 0" class="calendar-content">
-                <span v-for="item in dates" :class="{selected: item.dateFullString === selectedDate}" @click="selectDate(item)">
+                <span v-for="(item, index) in dates" :key="index" :class="{selected: item.dateFullString === selectedDate}" @click="selectDate(item)">
                   <a class="link">{{item.dateString}}</a>
                   <div>{{item.dayString}}</div>
                 </span>
               </div>
               <!--时间段-->
               <div v-show="stage === 1" class="calendar-content">
-                <span class="time" v-for="time in times" :class="{selected: time.value === selectedTime}" @click="selectTime(time)">
+                <span class="time" v-for="(time, index) in times" :key="index" :class="{selected: time.value === selectedTime}" @click="selectTime(time)">
                   {{time.name}}
                 </span>
                 <loading v-show="loading" style="width:100%;overflow:hidden;"/>
@@ -70,12 +70,14 @@
 <script>
 import clickoutside from '../utils/directive/clickoutside'
 import loading from 'components/LoadingIcon'
+
 export default {
   directives: {
     clickoutside
   },
   components: {loading},
   props: {
+
     // calendar的props
     /* 从字典表获取times */
     times: {
@@ -84,11 +86,13 @@ export default {
         return []
       }
     },
+
     /* loading动画 */
     loading: {
       type: Boolean,
       default: false
     },
+
     /* 默认选中的日期 */
     value: {
       type: Object,
@@ -99,51 +103,61 @@ export default {
         }
       }
     },
+
     /* 布尔类型，是否必填项，若为true则在label左上角显示一个红色* */
     required: {
       type: Boolean,
       default: false
     },
+
     /* 字符串类型，输入框前的标签文本 */
     label: {
       type: String,
       default: ''
     },
+
     /* 字符串类型，输入框里面的placeholder. */
     holder: {
       type: String,
       default: '请选择日期和时间段'
     },
+
     /* 各部分的圆角 */
     radius: {
       type: String,
       default: '4px'
     },
+
     /* label宽度 和 输入框的margin-left，不能为auto */
     labelWidth: {
       type: String,
       default: '90px'
     },
+
     /* 输入框宽度:160px-xx，注意：下拉菜单min-width:160px */
     inputWidth: {
       type: String,
       default: '340px'
     },
+
     /* 输入框高度:30px-50px，注意：对于整个datePicker，max-height:50px */
     inputHeight: {
       type: String,
       default: '40px'
     },
+
     /* 内嵌格式的icon */
     labelIcon: {
       type: String,
       default: 'glyphicon glyphicon-th-list'
     },
+
     /* 设置可写 */
     disabled: {
       type: Boolean,
       default: false
     },
+
     /* 是否警示输入不正确（边框变红） */
     isError: {
       type: Boolean,
@@ -174,6 +188,7 @@ export default {
     toggleStage () {
       this.stage = this.stage ? 0 : 1
     },
+
     // input方法
     /* 点击下落，再点击回退 */
     toggle () {
@@ -182,9 +197,11 @@ export default {
       }
       this.showDatePicker = !this.showDatePicker
       this.stage = 0
+
       if (this.showDatePicker) {
         let hit = this.$refs.inputRef
         let box = hit.getBoundingClientRect()
+
         if (box.bottom > (window.screen.availHeight / 2)) {
           this.top = '-10px'
           this.rotate = 'rotate(180deg)'
@@ -194,11 +211,13 @@ export default {
         this.rotate = null
       }
     },
+
     /* 隐藏选项栏 */
     hide () {
       this.showDatePicker = false
       this.stage = 0
     },
+
     /* 不同情况的下拉菜单margin-left */
     getMargin () {
       if (this.outside) {
@@ -214,6 +233,7 @@ export default {
         return '10px'
       }
     },
+
     /* 业务相关 */
     // 时间对象转字符串
     dateToString (value, type) {
@@ -223,17 +243,20 @@ export default {
         return (!value || value === '' || value === undefined) ? '' : `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`.replace(/\b(\w)\b/g, '0$1')
       }
     },
+
     // 获取星期几
     dateToDay (value) {
       let weekDay = {0: '周日', 1: '周一', 2: '周二', 3: '周三', 4: '周四', 5: '周五', 6: '周六'}
       let day = value.getDay()
       return weekDay[+day]
     },
+
     // 选择日期，跳转到选择时间
     selectDate (item) {
       this.selectedDate = item.dateFullString
       this.stage = 1
     },
+
     // 选择时间
     selectTime (time) {
       this.selectedTime = time.value
@@ -242,6 +265,7 @@ export default {
     },
     getSelectedTime () {
       this.selectedDate = this.dates[0].dateFullString
+
       if (this.times.length) {
         this.selectedTime = this.times[0].value
         this.selectedTimeName = this.times[0].name
@@ -250,6 +274,7 @@ export default {
     },
     getDates () {
       let date = this.date
+
       for (let i = 0; i < 8; i++) {
         let item = new Date(+date + 1000 * 60 * 60 * 24 * i)
         let dateFullString = this.dateToString(item)
@@ -285,6 +310,7 @@ export default {
 </script>
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   a{
    text-decoration:none;
   }

@@ -49,10 +49,10 @@ props解释
         <div class="cur-path">
           <a @click.prevent="getLastFiles" v-if="filePaths.length>1" style="padding-right: 15px">&lt;返回上一级</a>
           位置：
-          <a v-for="(filePath, index) in filePaths" @click.prevent="getCurFiles(filePath, index)">{{filePath}}</a>
+          <a v-for="(filePath, index) in filePaths" :key="index" @click.prevent="getCurFiles(filePath, index)">{{filePath}}</a>
         </div>
         <div style="width: 808px;margin: 0 auto;max-height: 500px;overflow: auto;" class="scrollbar">
-          <div v-for="file in files" class="icon-list">
+          <div v-for="(file, index) in files" :key="index" class="icon-list">
             <div class="icon-ct">
               <img :src="file.fileType === '0' ? require('../assets/image/filefolder.png') : accessIconPath + file.iconPath" @click="selectFiles(file)" class="icon" :style="{'border-radius': file.fileType === '0' ? '' : '50%'}">
             </div>
@@ -70,6 +70,7 @@ import RemoveIcon from 'components/RemoveIcon'
 import {listIcon, listChildrenIcon} from 'api/index.js'
 import {SHOW_TOAST} from 'store/types.js'
 import util from '../utils/utils.js'
+
 export default {
   props: {
     camera: {
@@ -153,6 +154,7 @@ export default {
         return
       }
       this.errorTip = ''
+
       if (this.required && (this.curValue === '' || this.curValue === null)) {
         this.errorTip = '请选择' + this.label
         return true
@@ -162,6 +164,7 @@ export default {
     getRootFolder () {
       listIcon().then(res => {
         this.filePaths = []
+
         if (res.data.code === '0') {
           let data = res.data.data
           this.files = data.icons
@@ -222,23 +225,18 @@ export default {
         this.getRootFolder()
       }
     },
+
     /* 设置图片是否有效 */
     setValid (isValid) {
       this.isValid = isValid
     },
-    /* 删除图片 */
-    // delImg () {
-    //   this.curValue = ''
-    //   this.$emit('input', this.curValue)
-    //   // this.$emit('delete')
-    // },
-    /* 展示大图 */
     showBigPhoto () {
       if (!this.isValid) {
         return false
       }
       this.showBigImage && (this.photoFlag = true)
     },
+
     /* 隐藏大图 */
     hidePhoto () {
       this.photoFlag = false
@@ -256,6 +254,7 @@ export default {
 
 <style scoped lang="less">
 @import '../assets/less/variables.less';
+
 .img-label{
   color: @light-black;
   font-size: 14px;

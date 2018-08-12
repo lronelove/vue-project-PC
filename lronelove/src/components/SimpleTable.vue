@@ -33,7 +33,7 @@ tableData: Array类型，表格主体部分的内容的数据，数组中一个�
             </label>
           </span>
           <select v-model="number" class="dropdown-toggle" style="height:3rem;vertical-align:middle;border-color:#ccc;border-radius:4px;">
-            <option v-for="pc in pageCounts" :value="pc">{{ pc }}</option>
+            <option v-for="(pc, index) in pageCounts" :key="index" :value="pc">{{ pc }}</option>
           </select>
           <a type="button" class="btn btn-default" style="margin-left:10px;" @click.prevent="refreshTable">
             <span class="glyphicon glyphicon-refresh" :class={rotation:refresh}></span>
@@ -47,7 +47,7 @@ tableData: Array类型，表格主体部分的内容的数据，数组中一个�
         <thead>
         <tr>
           <!--每个对象包含的列表的头部名称（一个数组）-->
-          <th v-for="(item,index) in tableHead" :style="{width: item.percent}" :class="{hide: showArray[index]}">
+          <th v-for="(item,index) in tableHead" :key="index" :style="{width: item.percent}" :class="{hide: showArray[index]}">
             <slot :name="item.id"><span :class="item.icon"></span>{{ item.name }}</slot>
           </th>
         </tr>
@@ -58,13 +58,13 @@ tableData: Array类型，表格主体部分的内容的数据，数组中一个�
             <span v-show="!tableLoading">没有任何记录</span>
             <div class="loading" v-show="tableLoading">
               <ul class="loading-animation">
-                <li v-for="i in 5"></li>
+                <li v-for="i in 5" :key="i"></li>
               </ul>
             </div>
           </td>
         </tr>
         <!-- filteredArray即为这个表格中单页显示的数组数据 -->
-        <tr  v-else v-for="obj in filteredArray">
+        <tr  v-else v-for="obj in filteredArray" :key="obj.toString()">
           <td v-for="(o,index) in obj" :key="index" :class="{hide: showArray[getObjectKeyOrder(obj,index)], num: !isNaN(o)}" style="min-height: 4rem;text-align: center">
             <div v-if="o === null || o=== undefined">''</div>
             <slot v-else :name="o.id">{{ o }}</slot>
@@ -82,7 +82,14 @@ tableData: Array类型，表格主体部分的内容的数据，数组中一个�
             <button type="button" class="btn btn-default" :disabled="firstDisable" @click="firstPage">首页</button>
             <button type="button" class="btn btn-default" :disabled="firstDisable" @click="previousPage">上页</button>
             <div class="page-number" v-if="pageNumber">
-              <a class="btn btn-default" v-for="page in filteredPage" @click.prevent="changeCurrentPage(page)" :class="{selectedPage: page === currentPage}">{{ page }}</a>
+              <a 
+                class="btn btn-default" 
+                v-for="page in filteredPage" 
+                @click.prevent="changeCurrentPage(page)"
+                :key="page.toString()" 
+                :class="{selectedPage: page === currentPage}"
+              >{{ page }}
+              </a>
             </div>
             <button class="btn btn-default" :disabled="lastDisable" @click="nextPage">下页</button>
             <button class="btn btn-default" :disabled="lastDisable" @click="lastPage">末页</button>
@@ -96,6 +103,7 @@ tableData: Array类型，表格主体部分的内容的数据，数组中一个�
 <script>
 import clickoutside from '../utils/directive/clickoutside'
 import _ from 'lodash'
+
 export default {
   props: {
     holder: {
@@ -128,6 +136,7 @@ export default {
       type: Boolean,
       default: true
     },
+
     /* 假如isFrontEndPage是false，则这个为必需传入的值，否则为非必需 */
     totalRecords: {
       type: Number,
@@ -161,9 +170,6 @@ export default {
     number () {
       this.currentPage = 1
     },
-    /* end () {
-      !this.isFrontEndPage && this.$emit('start', this.start) && this.$emit('end', this.end) && this.$parent.queryEvents()
-    }, */
     searchName (val) {
       if (val) {
         this.currentPage = 1
@@ -171,6 +177,7 @@ export default {
     }
   },
   computed: {
+
     /* 生成的每列的显示状态的数组 */
     showArray () {
       for (let i = 0; i < this.tableHead.length; i++) {
@@ -181,19 +188,21 @@ export default {
       }
       return this.showArr
     },
+
     /* 当没有数据时合并的列数 */
     colNumber () {
       return this.showArray.filter((item) => {
         return item === false
       }).length
     },
+
     /* 筛序数据使每列的data与head对齐 */
     filteredTableData () {
       if (!Array.isArray(this.tableData) || this.tableData.length === 0) {
         return []
       }
       let arr = []
-//      let pick = []
+
       for (let i = 0; i < this.tableHead.length; i++) {
         if (typeof this.tableHead[i] === 'object' && this.tableHead[i].hasOwnProperty('attrName')) {
           this.pick.push(this.tableHead[i].attrName)
@@ -201,10 +210,12 @@ export default {
           return this.tableData
         }
       }
+
       this.tableData.forEach((item) => {
         // console.info(_.pick(item, this.pick))
         typeof item === 'object' && arr.push(_.pick(item, this.pick))
       })
+
       arr.forEach((item) => {
         for (let i in item) {
           if (item[i] === null || item[i] === undefined) {
@@ -212,10 +223,7 @@ export default {
           }
         }
       })
-      // console.table(this.pick)
       this.pick = []
-      // console.info('table')
-      // console.table(arr)
       return arr
     },
     /* 数据总数 */
@@ -234,30 +242,36 @@ export default {
         }
       }
     },
+
     /* 前两个按钮对应为disable的class */
     firstDisable () {
       if (this.sum === 0) {
         return true
       }
+
       if (this.currentPage === 1) {
         return true
       }
       return false
     },
+
     /* 后两个按钮对应为disable的class */
     lastDisable () {
       if (this.sum === 0) {
         return true
       }
+
       if (this.currentPage === this.pageNumber) {
         return true
       }
       return false
     },
+
     /* 底部栏的页数 */
     pageNumber () {
       return Math.ceil(this.sum / this.number)
     },
+
     /* 底部的开始页数 */
     start () {
       if (this.sum === 0) {
@@ -265,20 +279,24 @@ export default {
       }
       return ((this.currentPage - 1) * this.number) + 1
     },
+
     /* 底部的结束页数 */
     end () {
       if (this.sum === 0) {
         return 0
       }
+
       if (this.isFrontEndPage) {
         return (this.currentPage * this.number) > this.searchData.length ? this.searchData.length : (this.currentPage * this.number)
       } else {
         return this.number < (this.totalRecords - this.start) ? (this.currentPage * this.number) : this.totalRecords
       }
     },
+
     /* 底部栏的总页数的数组 */
     showPage () {
       let arr = []
+
       for (let i = 0; i < this.pageNumber; i++) {
         arr.push(i + 1)
       }
@@ -287,6 +305,7 @@ export default {
     searchData () {
       let self = this
       let list = []
+
       this.filteredTableData.map(function (item) {
         for (let i in item) {
           if ((typeof (item[i]) === String || Number) && item[i].toString().indexOf(self.searchName) > -1) {
@@ -300,30 +319,16 @@ export default {
       })
       return list
     },
+
     /* 在列表中显示的数组 */
     filteredArray () {
       if (this.isFrontEndPage) {
-        /* let self = this
-        let list = []
-        this.filteredTableData.map(function (item) {
-          for (let i in item) {
-            if ((typeof (item[i]) === String || Number) && item[i].toString().indexOf(self.searchName) > -1) {
-              list.push(item)
-              break
-            } else if (item[i].text && (typeof (item[i].text) === String || Number) && item[i].text.toString().indexOf(self.searchName) > -1) {
-              list.push(item)
-              break
-            }
-          }
-        }) */
-        /* let arr = this.filteredTableData.filter(function (item) {
-          return item.name.indexOf(self.searchName) > -1
-        }) */
         return this.searchData.slice(this.start - 1, this.end) /* 前端过滤 */
       } else {
         return this.filteredTableData
       }
     },
+
     /* 在列表底部显示的分页功能 */
     filteredPage () {
       if (this.pageNumber < 5) {
@@ -331,6 +336,7 @@ export default {
       } else {
         let start = this.currentPage - 3
         let end = this.currentPage + 2
+
         if (start < 0) {
           start = 0
           end = 5
@@ -350,9 +356,11 @@ export default {
       this.currentPage = 1
       this.$emit('refreshTable', true)
     },
+
     /* 获取对象的初始key所对应的顺序 */
     getObjectKeyOrder (obj, key) {
       let i = 0
+
       for (let k in obj) {
         if (key === String(k)) {
           return i
@@ -360,14 +368,17 @@ export default {
         i++
       }
     },
+
     /* 显示或隐藏另存为 */
     showSave () {
       this.flag = !this.flag
     },
+
     /* 隐藏另存为 */
     hideSave () {
       this.flag = false
     },
+
     /* 改变当前的页面 */
     changeCurrentPage (page) {
       this.currentPage = page
@@ -376,18 +387,22 @@ export default {
     /* hideColumn (index) {
       this.$set(this.showArray, index, true)
     }, */
+
     /* 底部栏的第一页 */
     firstPage () {
       this.currentPage = 1
     },
+
     /* 上一页 */
     previousPage () {
       this.currentPage--
     },
+
     /* 下一页 */
     nextPage () {
       this.currentPage++
     },
+
     /* 最后一页 */
     lastPage () {
       this.currentPage = this.pageNumber
@@ -397,8 +412,6 @@ export default {
 </script>
 
 <style scoped>
-  .list{
-  }
   .list tr>td, .list tr>th{
     height:50px;
     vertical-align:middle;

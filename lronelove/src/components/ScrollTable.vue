@@ -125,6 +125,7 @@ export default {
   margin-bottom: 20px;
   position: relative;
   text-align: left;
+
   // 头部
   .tb-header{
     height: 50px;
@@ -145,11 +146,13 @@ export default {
       top: 0;
     }
   }
+  
   // 没有任何记录
   .tb-content-nodata{
     padding: 20px;
     text-align: center;
   }
+  
   // 内容
   .tb-body{
     .tb-content{

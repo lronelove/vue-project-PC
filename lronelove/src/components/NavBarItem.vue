@@ -80,6 +80,7 @@ ul,li {
   height:40px;
   font-size:33px;
 }
+
 /* 导航样式*/
 .nav{
   display:inline-block;
@@ -100,6 +101,7 @@ ul,li {
   color:#333;
   cursor: pointer;
 }
+
 /* 菜单样式 */
 .nav:hover >.menulist{
   display:block;

@@ -15,18 +15,22 @@
 
 <script>
 import tabArr from '../utils/tabArr'
+
 export default {
   name: 'tab-item',
   props: [ 'item', 'selection' ],
   methods: {
+
     // 关闭tab
     closetab (item) {
       this.$emit('closetab', item)
     },
+
     // 路由跳转
     switchview (item) {
       this.$emit('switchview', item)
     },
+    
     // 判断是否显示：
     // 先判断show属性，如果true/false，则按show属性返回；如果show属性为‘’，则判断sessionStorage中的tabs是否包含该项；如果sessionStorage中的没有tabs，则不显示。
     show (item) {
