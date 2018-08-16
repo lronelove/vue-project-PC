@@ -17,6 +17,7 @@ export default {
 </script>
 <style lang="less" scoped>
   @import '../assets/less/variables.less';
+  
   .tip{
     background: @light-gray;
     font-size: 0;

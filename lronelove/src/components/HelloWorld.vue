@@ -34,10 +34,19 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  mounted () {
+      axios.get('http://192.168.1.11:10080/business-accept-web/rest-api/v2/accpet/lease/getReturnLeaseList.json', {
+      }).then(res => {
+          console.log(res)
+      }).catch(err => {
+      })
   }
 }
 </script>
