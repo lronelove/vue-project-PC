@@ -40,6 +40,7 @@ props解释
 
 <script>
 import * as Types from '../../src/store/types'
+
 export default {
   props: {
     index: '',
@@ -91,13 +92,16 @@ export default {
     }
   },
   methods: {
+
     /* 预览图片 */
     previewImg (event) {
       let reader = new window.FileReader()
       const self = this
       event.target.files[0] && reader.readAsDataURL(event.target.files[0])
+
       reader.onload = function () {
         console.info(event.target.files[0].size)
+
         if (event.target.files[0].size > (self.maxImgSize * 1024 * 1024)) {
           self.$store.dispatch(Types.SHOW_TOAST, '图片体积过大，最大上传限制为' + self.maxImgSize + 'MB')
         } else {
@@ -106,14 +110,17 @@ export default {
         }
       }
     },
+
     /* 删除图片 */
     delImg () {
       this.$emit('input', null)
     },
+
     /* 展示大图 */
     showBigPhoto () {
       this.showBigImage && (this.photoFlag = true)
     },
+    
     /* 隐藏大图 */
     hidePhoto () {
       this.photoFlag = false
