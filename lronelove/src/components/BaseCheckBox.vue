@@ -47,7 +47,7 @@
 
 <script>
 import tabArr from '../utils/tabArr'
-import FormLabel from './Label.vue'
+import FormLabel from './SegiLabel.vue'
 
 export default {
   components: {FormLabel},

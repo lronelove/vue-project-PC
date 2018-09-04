@@ -39,7 +39,7 @@
 
 <script>
   import _ from 'lodash'
-  import FormLabel from './Label.vue'
+  import FormLabel from './SegiLabel.vue'
   import tabArr from '../utils/tabArr'
 
   export default {

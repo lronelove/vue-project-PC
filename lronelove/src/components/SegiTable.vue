@@ -279,7 +279,7 @@ props参数解释
 import clickoutside from '../utils/directive/clickoutside'
 import _ from 'lodash'
 import {table2Excel} from '../utils/utils'
-import Select2 from './Select2.vue'
+import Select2 from './SegiSelect2.vue'
 import Vue from 'vue'
 import ElementResize from '../utils/directive/elementresizeevent'
 

@@ -221,7 +221,7 @@ data () {
 
 <script>
 import clickoutside from '../utils/directive/clickoutside'
-import FormLabel from './Label.vue'
+import FormLabel from './SegiLabel.vue'
 import _ from 'lodash'
 // let val = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()
 export default {

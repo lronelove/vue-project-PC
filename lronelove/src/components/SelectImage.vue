@@ -65,7 +65,7 @@ props解释
 </template>
 
 <script>
-import Modal from './CommonCompoent/modal.vue'
+import Modal from './CommonCompoent/Segimodal.vue'
 import RemoveIcon from 'components/RemoveIcon'
 import {listIcon, listChildrenIcon} from 'api/index.js'
 import {SHOW_TOAST} from 'store/types.js'

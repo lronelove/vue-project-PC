@@ -118,7 +118,7 @@
 </template>
 
 <script>
-  import FormLabel from './Label.vue'
+  import FormLabel from './SegiLabel.vue'
 
   export default {
     name: 'SegiFormInput',

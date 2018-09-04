@@ -156,7 +156,7 @@
 import clickoutside from '../utils/directive/clickoutside'
 import _ from 'lodash'
 import { SHOW_TOAST } from '../store/types'
-import FormLabel from './Label.vue'
+import FormLabel from './SegiLabel.vue'
 
 export default {
   directives: {

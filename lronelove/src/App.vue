@@ -4,8 +4,6 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <img src="./assets/搂够.png" alt="">
-    <img src="./../public/img/搂够1.png" alt="">
     <router-view/>
   </div>
 </template>

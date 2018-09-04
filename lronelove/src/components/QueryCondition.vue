@@ -85,7 +85,7 @@ array: Array属性。
   </div>
 </template>
 <script>
-  import Select2 from './Select2'
+  import Select2 from './SegiSelect2'
   import SegiFormInput from './SegiFormInput'
   import DatePicker from './DatePicker'
 

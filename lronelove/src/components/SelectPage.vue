@@ -32,7 +32,7 @@ slot说明
 </template>
 
 <script>
-import Modal from './CommonCompoent/modal.vue'
+import Modal from './CommonCompoent/Segimodal.vue'
 
 export default {
   props: {
